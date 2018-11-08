@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="theme-color" content="#e7e8e8"/>
+
+<title>Create a UWP package manifest for a web app</title>
+
+<link rel="icon" href="favicon.ico"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="prefetch" href="package.html" as="document"/>
+
+<link rel="stylesheet" href="site.css"/>
+<link rel="stylesheet" href="app.css"/>
+<style>
+  form > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  button[type="submit"] {
+    display: block;
+    margin: .25em auto;
+    text-align: center;
+  }
+
+  h1 {
+    text-align: center;
+  }
+  h2 {
+    border-bottom: .125rem solid;
+    margin: 0;
+    padding: 0 .125rem .25rem;
+  }
+  section {
+    margin-bottom: 1em;
+  }
+  form ul {
+    margin: .25em 0;
+  }
+
+  form small {
+    margin-bottom: .1rem;
+  }
+
+  :not(fieldset) > label, legend {
+    display: block;
+    font-size: 1.125em;
+    padding: .125em 0;
+  }
+  legend {
+    padding-bottom: 0;
+  }
+  fieldset > label {
+    display: inline-block;
+    text-align: center;
+  }
+  #orientation > label {
+  min-width: 10.5em;
+  width: 25%;
+  }
+  #orientation > small, #version > small:first-of-type {
+    margin: .5em auto 0;
+  }
+  #version > small:not(:first-of-type) {
+    display: inline-block;
+  }
+  #version > label:first-of-type {
+    margin-left: .5em;
+  }
+  label > svg {
+    display: block;
+    margin: .25em auto .5em;
+    width: 2.5em;
+    height: 2.5em;
+  }
+  input[type=number] {
+    display: block;
+    text-align: right;
+  }
+
+  #output {
+    margin: 0 auto;
+    scroll-behavior: smooth;
+    text-align: center;
+  }
+  output {
+    background: #fff;
+    border: .125rem ridge;
+    font-family: monospace;
+    font-size: .9375em;
+    margin: 1.5em auto .25em;
+    max-width: 190ch;
+    padding: .25em;
+    text-align: left;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  output:not([hidden]) {
+    display: block;
+  }
+  output,
+  code {
+    speak: literal-punctuation;
+    speak-as: literal-punctuation;
+  }
+
+  fieldset, .field {
+    padding: .4em .35em;
+    margin: .25em;
+  }
+  fieldset {
+    border: 0;
+    margin-top: .6em;
+  }
+
+  button[type=submit] line {
+    stroke-dasharray: 0 10;
+    transition: stroke-dasharray .1s;
+  }
+  button[type=submit] line:last-child {
+    transition-delay: .1s;
+  }
+  button[type=submit]:enabled:hover line,
+  button[type=submit]:focus line {
+    stroke-dasharray: 10 10;
+  }
+  #save line {
+    stroke-dasharray: 9 1.5;
+    transition: stroke-dasharray .2s;
+  }
+  #save:enabled:hover line,
+  #save:focus line {
+    stroke-dasharray: 10.5 1.5;
+  }
+</style>
+
+<nav>
+  <a href="index.html" rel="home" title="Homepage">
+    The
+    <abbr>PWA</abbr><abbr>2</abbr><abbr>UWP</abbr>
+    toolkit
+  </a>
+
+  <ul>
+    <li><a href="tile-icons.html">Tile icons generator</a>
+    </li><li aria-current="page">Appx manifest generator</li>
+  </ul>
+
+  <a href="package.html" class="pkg">
+    <span>Your <abbr>UWP</abbr> app package</span>
+    <dl>
+      <dt>Icons:</dt>
+      <dd class="iconstatus">?</dd>
+      <dt>Manifest:</dt>
+      <dd class="manifeststatus">?</dd>
+    </dl>
+  </a>
+</nav>
+
+<main>
+  <h1>
+    Create a
+    <a href="https://docs.microsoft.com/uwp/schemas/appxpackage/appx-package-manifest" rel="external">
+      <abbr title="Universal Windows Platform">UWP</abbr>
+      package manifest</a> for a web app
+  </h1>
+
+  <form action="#">
+    <div>
+      <section id="generalities" aria-labelledby="generalities-h">
+        <h2 id="generalities-h">Generalities</h2>
+
+        <div class="field">
+          <label>
+            Name:
+            <input type="text" id="displayName" aria-describedby="displayName-descr"
+                   minlength="1" maxlength="256" pattern="(?!NoUIEntryPoints).*\S.*"
+                   required="required"/>
+            <!--
+                 [pattern] is overly restrictive; only “NoUIEntryPoints” and
+                 “NoUIEntryPoints-DesignMode” are supposed to be prohibited,
+                 while here anything *starting with* “NoUIEntryPoints” is invalid.
+                 That doesn’t seem like a big deal in practice.
+              -->
+          </label>
+          <small id="displayName-descr">
+            A friendly name for your app. It doesn’t have to be the name that you reserved.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            Description:
+            <input type="text" id="description" aria-describedby="description-descr"
+                   size="70" minlength="1" maxlength="2048" pattern=".*\S.*"
+                   required="required"/>
+          </label>
+          <small id="description-descr">
+            A description of your app, in a paragraph or less.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            Start <abbr>URL</abbr>:
+            <input type="url" id="url" aria-describedby="url-descr"
+                   size="30" minlength="8" maxlength="2084"
+                   pattern="(?:https?|ms-appx-web)://\S+" spellcheck="false"
+                   required="required"/>
+          </label>
+          <small id="url-descr">
+            The absolute <abbr>URL</abbr> of the page to load when your app is launched.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            Language:
+            <input type="text" id="lang" aria-describedby="lang-descr"
+                   size="5" maxlength="256" autocapitalize="none"
+                   pattern="(?:(en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang))|((?:([A-Za-z]{2,3}(-(?:[A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-(?:[A-Za-z]{4}))?(-(?:[A-Za-z]{2}|[0-9]{3}))?(-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-(?:[0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(?:x(-[A-Za-z0-9]{1,8})+))?)|(?:x(-[A-Za-z0-9]{1,8})+)" required="required"/>
+            <!-- Regexp copied from https://stackoverflow.com/a/7036171 -->
+          </label>
+          <small id="lang-descr">
+            The human language spoken by your app, as a
+            <a href="https://en.wikipedia.org/wiki/IETF_language_tag" rel="external">
+              <abbr>BCP</abbr>-47</a> language tag.
+          </small>
+        </div>
+
+        <fieldset id="orientation" aria-describedby="orientation-descr">
+          <legend>Screen orientation:</legend>
+
+          <label>
+            <svg aria-hidden="true" id="screen" viewBox="0 0 36 28">
+              <rect width="36" height="28" rx="3" ry="3" fill="currentcolor"/>
+              <rect x="3" y="3" width="30" height="18" rx="1" ry="1" fill="window"/>
+              <circle cx="18" cy="24" r="2" fill="window"/>
+            </svg>
+            <input type="checkbox" id="landscapeOrientation"
+                   /><span aria-hidden="true"></span>Landscape
+          </label><label>
+            <svg aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 style="transform: rotate(90deg)">
+              <use xlink:href="#screen"/>
+            </svg>
+            <input type="checkbox" id="portraitOrientation"
+                   /><span aria-hidden="true"></span>Portrait
+          </label><label>
+            <svg aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 style="transform: rotate(180deg)">
+              <use xlink:href="#screen"/>
+            </svg>
+            <input type="checkbox" id="landscapeFlippedOrientation"
+                   /><span aria-hidden="true"></span>Landscape-flipped
+          </label><label>
+            <svg aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 style="transform: rotate(-90deg)">
+              <use xlink:href="#screen"/>
+            </svg>
+            <input type="checkbox" id="portraitFlippedOrientation"
+                   /><span aria-hidden="true"></span>Portrait-flipped
+          </label>
+
+          <small id="orientation-descr">
+            Selecting <em>none of them</em> is equivalent to selecting <em>all of them</em>.
+          </small>
+        </fieldset>
+
+
+        <fieldset id="version" aria-describedby="version-descr">
+          <legend>Version:</legend>
+
+          <label>
+            <input type="number" id="majorVersion"
+                   min="1" max="65535" step="1" pattern="\d*" required="required"/>
+            Major
+          </label>
+          <label>
+            <input type="number" id="minorVersion"
+                   min="0" max="65535" step="1" pattern="\d*" required="required"/>
+            Minor
+          </label>
+          <label>
+            <input type="number" id="buildVersion"
+                   min="0" max="65535" step="1" pattern="\d*" required="required"/>
+            Build
+          </label>
+          <label aria-describedby="revision-descr">
+            <input type="number" id="revisionVersion" value="0"
+                   min="0" max="0" readonly="readonly" required="required"/>
+            Revision
+          </label>
+          <!--
+               [pattern] are for iOS Safari, to trigger the numeric keyboard.
+               See https://tinyurl.com/safari-input-number
+            -->
+
+          <small id="version-descr">
+            The version should be <em>strictly increasing</em>
+            for the Store to consider it an update.
+          </small>
+          <small id="revision-descr">
+            The revision number is reserved for Store use.
+          </small>
+          <small>
+            <a href="https://docs.microsoft.com/windows/uwp/publish/package-version-numbering"
+               rel="external">Learn more about version numbering</a>.
+            </small>
+        </fieldset>
+      </section>
+
+      <div>
+      <section id="iconography" aria-labelledby="iconography-h">
+        <h2 id="iconography-h">Iconography</h2>
+
+        <div class="field">
+          <label>
+            Path to store icon:
+            <input type="text" id="storeLogoPath" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   required="required"/>
+          </label>
+
+          <label>
+            Path to small tile icon:
+            <input type="text" id="square44x44LogoPath" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   required="required"/>
+          </label>
+
+          <label>
+            Path to medium tile icon:
+            <input type="text" id="square150x150LogoPath" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   required="required"/>
+          </label>
+
+          <small id="path-descr">
+            Paths are relative to the manifest location.
+            The extension must be <code>.png</code>, <code>.jpg</code>,
+            or <code>.jpeg</code>.
+            <a href="https://docs.microsoft.com/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements#remarks"
+               rel="external">Learn more about icons</a>.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            Background color:
+            <input type="color" id="bgColor" aria-describedby="bgColor-descr"
+                   pattern="#[a-fA-F0-9]{6}" size="7" minlength="7" maxlength="7"
+                   required="required"/>
+          </label>
+          <small id="bgColor-descr">
+            It’s used:
+            <ul>
+              <li>as the background color of your app tiles,</li>
+              <li>as the button color in your app dialog boxes,</li>
+              <li>on the description page of your app in the Store.</li>
+            </ul>
+          </small>
+        </div>
+      </section>
+
+      <section id="msstore" aria-labelledby="msstore-h">
+        <h2 id="msstore-h">Microsoft Store identifiers</h2>
+
+        <div class="field">
+          <label>
+            Reserved name:
+            <input type="text" id="reservedName" aria-describedby="reservedName-descr"
+                   minlength="1" maxlength="256" pattern="[A-Za-z][\w\d\-\.]*" required="required"/>
+          </label>
+          <small id="reservedName-descr">
+            The name that you
+            <a href="https://docs.microsoft.com/windows/uwp/publish/create-your-app-by-reserving-a-name"
+               rel="external">reserved for your app</a>
+            in the Microsoft Partner Center.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>
+            Publisher:
+            <input type="text" id="publisher" aria-describedby="identity-descr"
+                   spellcheck="false" size="48" minlength="1" maxlength="8192"
+                   pattern='(CN|L|O|OU|E|C|S|STREET|T|G|I|SN|DC|SERIALNUMBER|(OID\.(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))+))=(([^,+="&lt;>#;])+|".*")(, ((CN|L|O|OU|E|C|S|STREET|T|G|I|SN|DC|SERIALNUMBER|(OID\.(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))+))=(([^,+="&lt;>#;])+|".*")))*'
+                   required="required"/>
+          </label>
+
+          <label>
+            Publisher display name:
+            <input type="text" id="publisherDisplayName" aria-describedby="identity-descr"
+                   minlength="1" maxlength="256" pattern=".*\S.*" required="required"/>
+          </label>
+
+          <label>
+            Package identity name:
+            <input type="text" id="pkgIdentityName" aria-describedby="identity-descr"
+                   size="30" minlength="3" maxlength="50" pattern="[\w\d\-\.]+[\w\d\-]"
+                   required="required"/>
+          </label>
+
+          <small id="identity-descr">
+            Find this info in the
+            <a href="https://partner.microsoft.com/dashboard/" rel="external">
+              Microsoft Partner Center</a>
+            under Products → <var>your app</var> → App management → App identity.
+          </small>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <button type="submit" disabled="disabled"
+            title="The generated XML manifest will be displayed below.
+You’ll be able to download it or add it to your package.">
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+        <polygon points="13,1 4,1 4,23 20,23 20,8"/>
+        <polyline points="13,1 13,8 20,8"/>
+        <line x1="7" x2="17" y1="13" y2="13"/>
+        <line x1="7" x2="17" y1="18" y2="18"/>
+      </svg>Generate the manifest
+    </button>
+
+    <section id="output" hidden="hidden">
+      <output tabindex="0" translate="no"></output>
+
+      <button type="button" id="save" disabled="disabled">
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+          <line x1="12" y1="13" x2="1.5" y2="13"/>
+          <line x1="12" y1="13" x2="22.5" y2="13"/>
+          <line x1="12" y1="13" x2="12" y2="2.5"/>
+          <line x1="12" y1="13" x2="12" y2="23.5"/>
+        </svg>Save in your package
+      </button>
+
+      <a hidden="hidden" download="appxmanifest.xml"></a>
+      <button type="button">
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+          <line x1="4" x2="20" y1="23" y2="23"/>
+          <g>
+            <line x1="12" x2="12" y1="1" y2="19"/>
+            <polyline points="12,8 12,19 23,19" transform="rotate(-45 12 19)"/>
+          </g>
+        </svg>Download <code>appxmanifest.xml</code>
+      </button>
+    </section>
+  </form>
+</main>
+
+<script src="appx-manifest.js" type="module"></script>
+<noscript>
+  ⚠ You need to <a href="https://enable-JavaScript.com" rel="external">enable JavaScript</a>.
+</noscript>
+
+<footer>
+  <p>
+    <small>
+      <a href="mailto:paul&#64;fragara.com?subject=PWA2UWP" rel="external author" lang="fr">
+        Paul</a> made this site in <time>2018</time>, when publishing
+      <a href="https://FreeSolitaire.win" rel="external">FreeSolitaire.win</a>
+      to the Microsoft Store.
+    </small>
+  </p>
+  <p>
+    <small>This site is not affiliated or endorsed by Microsoft.</small>
+  </p>
+</footer>
+
+</html>

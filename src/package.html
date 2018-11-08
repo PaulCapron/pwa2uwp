@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="theme-color" content="#e7e8e8"/>
+
+<title>Your UWP application package</title>
+
+<link rel="icon" href="favicon.ico"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+
+<link rel="stylesheet" href="site.css"/>
+<link rel="stylesheet" href="app.css"/>
+<style>
+  main > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  div > section {
+    width: 48%;
+  }
+  section > section + section {
+    margin-top: .5em;
+  }
+
+  details {
+    margin: .25em;
+  }
+  summary > a,
+  summary > span {
+    float: right;
+  }
+  summary > a {
+    margin: 0 .125em;
+    padding: .425em .6em;
+  }
+  summary > span {
+    color: #fff;
+    font-weight: bolder;
+    min-width: 8ch;
+    padding: .125em .5em;
+    text-align: center;
+  }
+  span.ok {
+    background: #061;
+  }
+  span.miss {
+    background: #a30;
+  }
+  span.miss::before {
+    content: "⚠️ ";
+    speak: none;
+    speak: never;
+  }
+
+  h1 {
+    text-align: center;
+  }
+  h2 {
+    border-bottom: .125rem solid;
+    margin: 0;
+    padding: 0 .125rem .25rem;
+  }
+  h3 {
+    display: inline-block;
+    margin: .3rem 0;
+  }
+
+  summary > span,
+  img,
+  textarea {
+    margin: .3rem 0;
+  }
+  img {
+    /* Thanks https://cssgradient.io/blog/gradient-patterns/#checkerboard */
+    background: var(--bg-white);
+    background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    background-size: 20px 20px;
+    border: .0625em solid var(--fg-grey);
+    vertical-align: top;
+    -ms-high-contrast-adjust: none;
+  }
+  textarea {
+    font-family: monospace;
+    font-size: smaller;
+    width: 99%;
+  }
+  textarea,
+  code,
+  kbd {
+    speak: literal-punctuation;
+    speak-as: literal-punctuation;
+  }
+  kbd {
+    display: block;
+    font-weight: bolder;
+    margin: .75em 1vw;
+    overflow-x: auto;
+  }
+
+  h2 + p {
+    margin-bottom: 1.5em;
+    text-align: center;
+  }
+  section > small {
+    display: block;
+    margin: .75em .25rem;
+  }
+
+  @media (max-width: 50em) {
+    .pkg {
+      display: none;
+    }
+    div > section {
+      width: 100%;
+    }
+    h2 { /* visually hidden */
+      height: 1px;
+      margin: 0;
+      opacity: 0;
+      padding: 0;
+      white-space: nowrap;
+      width: 1px;
+    }
+  }
+</style>
+<style>/* this last stylesheet operated in JavaScript */</style>
+
+<nav>
+  <a href="index.html" rel="home" title="Homepage">
+    The
+    <abbr>PWA</abbr><abbr>2</abbr><abbr>UWP</abbr>
+    toolkit
+  </a>
+
+  <ul>
+    <li><a href="tile-icons.html">Tile icons generator</a>
+    </li><li><a href="appx-manifest.html">Appx manifest generator</a></li>
+  </ul>
+
+  <div aria-current="page" class="pkg">
+    <span>Your <abbr>UWP</abbr> app package</span>
+    <dl>
+      <dt>Icons:</dt>
+      <dd class="iconstatus">?</dd>
+      <dt>Manifest:</dt>
+      <dd class="manifeststatus">?</dd>
+    </dl>
+  </div>
+</nav>
+
+<main>
+  <h1>
+    Your <abbr title="Universal Windows Platform">UWP</abbr> application package
+  </h1>
+
+  <div>
+    <section aria-labelledby="content-h">
+      <h2 id="content-h">Content</h2>
+
+      <section aria-labelledby="icons-h">
+        <details>
+          <summary>
+            <h3 id="icons-h">Tile icons</h3>
+            <span class="iconstatus">?</span>
+            <a href="tile-icons.html" aria-label="Edit icons">Edit</a>
+          </summary>
+          <img id="Square44x44Logo" alt="Square44x44Logo" width="44" height="44"/>
+          <img id="Square71x71Logo" alt="Square71x71Logo" width="71" height="71"/>
+          <img id="Square150x150Logo" alt="Square150x150Logo" width="150" height="150"/>
+          <img id="Wide310x150Logo" alt="Wide310x150Logo" width="310" height="150"/>
+          <img id="Square310x310Logo" alt="Square310x310Logo" width="310" height="310"/>
+        </details>
+      </section>
+
+      <section aria-labelledby="manifest-h">
+        <details>
+          <summary>
+            <h3 id="manifest-h">Manifest</h3>
+            <span class="manifeststatus">?</span>
+            <a href="appx-manifest.html" aria-label="Edit manifest">Edit</a>
+          </summary>
+          <textarea id="manifest" rows="32" readonly="readonly"></textarea>
+        </details>
+      </section>
+
+      <small>
+        The generated content is saved on your device,
+        using
+        <a href="https://developer.mozilla.org/docs/Web/API/IndexedDB_API" rel="external">
+          <code>IndexedDB</code></a>.
+      </small>
+    </section>
+
+    <section aria-labelledby="next-h">
+      <h2>What’s next</h2>
+
+      <p>
+        <a hidden="hidden" download="uwp-pkg.zip"></a>
+        <button type="button" disabled="disabled">
+          <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+            <line x1="4" x2="20" y1="23" y2="23"/>
+            <g>
+              <line x1="12" x2="12" y1="1" y2="19"/>
+              <polyline points="12,8 12,19 23,19" transform="rotate(-45 12 19)"/>
+            </g>
+          </svg>Download your package as a Zip
+        </button>
+      </p>
+
+      <p>
+        You will
+        <strong>need to convert the package zip to an <code>.appx</code> file</strong>
+        to submit it to the Microsoft Store.
+      </p>
+      <p>
+        Call the
+        <a href="https://github.com/MicrosoftEdge/CloudAppX" rel="external">
+          CloudAppX web service</a> for this.
+        For instance, using <a href="https://en.wikipedia.org/wiki/CURL" rel="external">
+          <code>curl</code></a>:
+        <kbd>curl -o <var>name</var>.appx -F "xml=@uwp-pkg.zip" https://cloudappx.azurewebsites.net/v3/build</kbd>
+      <small>
+        This results in a file named <code><var>name</var>.appx</code>,
+        downloaded in the current directory. Use any <var>name</var> you want.
+        <br/>
+        The input zip must be named <code>uwp-pkg.zip</code>.
+      </small>
+      </p>
+
+      <p>
+        You can also do the conversion offline,
+        <a href="https://docs.microsoft.com/windows/uwp/packaging/manual-packaging-root"
+           rel="external">
+          using the <code>MakeAppx.exe</code> &amp; <code>SignTool.exe</code> utilities</a>
+        that are included in the Windows 10 <abbr title="Software Development Kit">SDK</abbr>.
+      </p>
+    </section>
+  </div>
+</main>
+
+<script src="package.js" type="module"></script>
+<noscript>
+  ⚠ You need to <a href="https://enable-JavaScript.com" rel="external">enable JavaScript</a>.
+</noscript>
+
+<footer>
+  <p>
+    <small>
+      <a href="mailto:paul&#64;fragara.com?subject=PWA2UWP" rel="external author" lang="fr">
+        Paul</a> made this site in <time>2018</time>, when publishing
+      <a href="https://FreeSolitaire.win" rel="external">FreeSolitaire.win</a>
+      to the Microsoft Store.
+    </small>
+  </p>
+  <p>
+    <small>This site is not affiliated or endorsed by Microsoft.</small>
+  </p>
+</footer>
+
+</html>

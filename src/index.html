@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" typeof="schema:WebSite">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="theme-color" content="#e7e8e8"/>
+
+<title property="schema:name dc:title">The PWA2UWP toolkit</title>
+<meta property="og:title" content="The PWA2UWP toolkit"/>
+<meta property="og:description" name="description"
+      content="Online tools helping to make a web application available on Windows 10."/>
+<meta property="og:type" content="website"/>
+<meta property="schema:keywords dc:subject" name="keywords"
+      content="progressive web application,universal Windows platform"/>
+
+<meta property="schema:accessibilityHazard" content="none"/>
+<meta property="schema:accessibilityFeature" content="highContrastDisplay"/>
+<meta property="schema:accessibilityFeature" content="displayTransformability"/>
+<meta property="schema:accessibilityFeature" content="structuralNavigation"/>
+<meta property="schema:accessibilityControl" content="fullKeyboardControl"/>
+<meta property="schema:accessibilityAPI" content="ARIA"/>
+
+<meta property="og:image" content="apple-touch-icon.png"/>
+<meta property="og:url" content="/"/>
+<link rel="canonical" href="/"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="icon" href="favicon.ico"/>
+<link rel="prefetch" href="tile-icons.html" as="document"/>
+<link rel="prefetch" href="appx-manifest.html" as="document"/>
+
+<link rel="stylesheet" href="site.css"/>
+<style>
+  header {
+    background: var(--bg-grey);
+    overflow: hidden; /* because of 3D transform (perspective) */
+    padding: 1em .25em 0;
+    text-align: center;
+  }
+
+  div[role=img] {
+    cursor: default;
+    position: relative;
+    margin: .75em auto 2.25em;
+    max-width: 25em;
+    transform: perspective(200px) rotateY(-22.5deg) translate(-1rem);
+    user-select: none;
+    -ms-high-contrast-adjust: none;
+  }
+  div[role=img] > div {
+    color: #fff;
+    display: inline-block;
+    font-size: calc(2em + .75vmin);
+    font-weight: bolder;
+    height: 1.525em;
+    margin: 0 auto;
+    position: relative;
+    text-shadow: 1px 1px 1px var(--fg-grey);
+    width: 1.525em;
+    transition: background .3s .1s;
+  }
+  div[role=img] > div:nth-of-type(even) {
+    background: #27b5f1;
+  }
+  div[role=img] > div:nth-of-type(odd) {
+    background: #f16529;
+  }
+  div[role=img]:hover > div:nth-of-type(even) {
+    background: #f16529;
+  }
+  div[role=img]:hover > div:nth-of-type(odd) {
+    background: #27b5f1;
+  }
+  .arrow {
+    animation: point 1s;
+    border: .25em solid transparent;
+    border-top-color: #f16529;
+    clip-path: polygon(0 -1px, 50% 75%, 100% -1px); /* https://accessibility.blog.gov.uk/2018/08/01/supporting-users-who-change-colours-on-gov-uk/ */
+    height: 0;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%);
+    transition: border-top-color .3s .1s;
+    width: 0;
+  }
+  div[role=img]:hover .arrow {
+    border-top-color: #27b5f1;
+  }
+  @keyframes point { from { border-width: 0; } }
+
+  main p {
+    margin-left: 1em;
+  }
+  ul {
+    padding-left: 2.25rem;
+  }
+  li {
+    margin: .25em 0;
+  }
+
+  nav:first-of-type > ul {
+    font-size: larger;
+    font-weight: bolder;
+  }
+</style>
+
+<header>
+  <div role="img" aria-label="Logo">
+    <div>P</div><div>W</div><div>A</div><br/>
+    <div><div class="arrow"></div>U</div><div>W</div><div><div class="arrow"></div>P</div>
+  </div>
+
+  <h1>
+    The
+    <abbr title="Progressive Web App to Universal Windows Platform">PWA2UWP</abbr>
+    toolkit
+  </h1>
+</header>
+
+<main>
+  <nav aria-labelledby="tools">
+    <h2 id="tools">Tools</h2>
+    <ul>
+      <li><a href="tile-icons.html">Tile icons generator</a></li>
+      <li><a href="appx-manifest.html">Appx manifest generator</a></li>
+    </ul>
+    <p>
+      Set both in <a href="package.html"><strong>your package</strong></a>
+      and you can submit a web app to the Microsoft Store 😉
+    </p>
+  </nav>
+
+  <section aria-labelledby="about">
+    <h2 id="about">About</h2>
+    <p property="schema:description dc:description">
+      This site consists of online tools that are useful when publishing a
+      <a href="https://developer.mozilla.org/Apps/Progressive" rel="external">
+        Progressive Web App (<abbr>PWA</abbr>)</a> to Windows 10 customers.
+    </p>
+    <p>
+      Applications available on the Microsoft Store are
+      “<a href="https://docs.microsoft.com/windows/uwp/" rel="external">Universal
+        Windows Platform (<abbr>UWP</abbr>)</a> apps”,
+      because they can run on any Windows device
+      (<abbr>PCs</abbr>, tablets, Xbox, <abbr>etc.</abbr>)
+    </p>
+  </section>
+
+  <nav aria-labelledby="externs">
+    <h2 id="externs">External links</h2>
+    <ul>
+      <li>
+        <a href="https://www.pwabuilder.com" rel="external">
+          <abbr>PWA</abbr>Builder.com, an alternative to this site
+        </a>
+      </li>
+      <li>
+        <a href="https://www.microsoft.com/store"
+           rel="external">The Microsoft Store</a> -
+        <a href="https://developer.microsoft.com/store/register"
+           rel="external">Developer account registration</a>
+      </li>
+      <li>
+        <a href="https://developer.microsoft.com/windows/downloads/virtual-machines"
+           rel="external">Windows 10 virtual machines</a> -
+        <a href="https://developer.microsoft.com/microsoft-edge/tools/vms/"
+           rel="external"><abbr title="Internet Explorer">IE</abbr>/Edge virtual machines</a>
+      </li>
+      <li>
+        <a href="https://developer.mozilla.org/Apps/Progressive" rel="external">
+          “Progressive Web Apps” on <abbr title="Mozilla Developer Network">MDN</abbr>
+        </a>
+      </li>
+      <li>
+        <a href="https://docs.microsoft.com/microsoft-edge/progressive-web-apps"
+           rel="external">“Progressive Web Apps” on Microsoft Edge doc center</a>
+      </li>
+      <li>
+        <a href="https://en.wikipedia.org/wiki/Progressive_Web_Apps"
+           rel="external">“Progressive Web Apps” on Wikipedia</a>
+      </li>
+      <li>
+        <a href="https://docs.microsoft.com/windows/uwp/"
+           rel="external">Universal Windows Platform official documentation</a>
+      </li>
+      <li>
+        <a href="https://en.wikipedia.org/wiki/Universal_Windows_Platform"
+           rel="external">“Universal Windows Platform” on Wikipedia</a>
+      </li>
+      <li>
+        <a href="https://en.wikipedia.org/wiki/Universal_Windows_Platform_apps"
+           rel="external">“Universal Windows Platform <em>apps</em>” on Wikipedia</a>
+      </li>
+    </ul>
+  </nav>
+</main>
+
+<footer>
+  <p>
+    <small>
+      <a href="mailto:paul&#64;fragara.com?subject=PWA2UWP" rel="external author" lang="fr">
+        Paul</a>
+      made this site in
+      <time property="schema:datePublished dc:created">2018</time>,
+      when publishing
+      <a href="https://FreeSolitaire.win" rel="external">FreeSolitaire.win</a>
+      to the Microsoft Store.
+    </small>
+  </p>
+  <p>
+    <small>This site is not affiliated or endorsed by Microsoft.</small>
+  </p>
+</footer>
+
+</html>

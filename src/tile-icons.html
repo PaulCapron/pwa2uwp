@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="theme-color" content="#e7e8e8"/>
+
+<title>Generate tile icons for a UWP application</title>
+
+<link rel="icon" href="favicon.ico"/>
+<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<link rel="prefetch" href="package.html" as="document"/>
+
+<link rel="stylesheet" href="site.css"/>
+<link rel="stylesheet" href="app.css"/>
+<style>
+  body[aria-busy] {
+    opacity: .5;
+    transition: opacity .5s .2s;
+  }
+  main {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  p + ul {
+    margin-top: -.5em;
+  }
+
+  .field {
+    display: block;
+    padding: .25em 0;
+  }
+  label {
+    font-size: 1.1em;
+    font-weight: bolder;
+  }
+
+  section {
+    flex: 1 1 650px;
+    text-align: center;
+  }
+  output {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  figure {
+    background: #f0f0f0;
+    display: flex;
+    flex: 0 0 310px;
+    flex-direction: column;
+    margin: .1em;
+    padding: .5em;
+  }
+  h2 {
+    margin: .5em 0 0;
+  }
+  figure > div {
+    margin: auto;
+  }
+  figcaption > a + a {
+    margin-left: .25em;
+  }
+  canvas {
+    /* Thanks https://cssgradient.io/blog/gradient-patterns/#checkerboard */
+    background: var(--bg-white);
+    background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    background-size: 20px 20px;
+    -ms-high-contrast-adjust: none;
+  }
+  #Square44x44Logo canvas {
+    height: 44px;
+    width: 44px;
+  }
+  #Square71x71Logo canvas {
+    height: 71px;
+    width: 71px;
+  }
+  #Square150x150Logo canvas {
+    height: 150px;
+    width: 150px;
+  }
+  #Square310x310Logo canvas {
+    height: 310px;
+    width: 310px;
+  }
+  #Wide310x150Logo canvas {
+    height: 150px;
+    width: 310px;
+  }
+
+  #save line {
+    stroke-dasharray: 9 1.5;
+    transition: stroke-dasharray .2s;
+  }
+  #save:enabled:hover line,
+  #save:focus line {
+    stroke-dasharray: 10.5 1.5;
+  }
+</style>
+<style>/* this last stylesheet operated in JavaScript */</style>
+
+<nav>
+  <a href="index.html" rel="home" title="Homepage">
+    The
+    <abbr>PWA</abbr><abbr>2</abbr><abbr>UWP</abbr>
+    toolkit
+  </a>
+
+  <ul>
+    <li aria-current="page">Tile icons generator
+    </li><li><a href="appx-manifest.html">Appx manifest generator</a></li>
+  </ul>
+
+  <a href="package.html" class="pkg">
+    <span>Your <abbr>UWP</abbr> app package</span>
+    <dl>
+      <dt>Icons:</dt>
+      <dd class="iconstatus">??</dd>
+      <dt>Manifest:</dt>
+      <dd class="manifeststatus">??</dd>
+    </dl>
+  </a>
+</nav>
+
+<main>
+  <div>
+    <h1>
+      Generate tile icons for a
+      <abbr title="Universal Windows Platform">UWP</abbr>
+      application
+    </h1>
+
+    <p>
+      This tool can help you create the
+      <a href="https://docs.microsoft.com/windows/uwp/design/shell/tiles-and-notifications/app-assets"
+         rel="external">tile icons needed for a Windows 10 program</a>.
+    </p>
+    <p>
+      It will work well if you can provide a source image that:
+    </p>
+    <ul>
+      <li>has square dimensions (width = height)</li>
+      <li>has no extra padding</li>
+      <li>is in <abbr>SVG</abbr> format, to avoid ugly rendering when down- or up-scaling</li>
+    </ul>
+
+    <form id="form" action="#">
+      <label class="field">
+        Select your source logo image:
+        <input type="file" accept="image/*" id="srcimg"/>
+      </label>
+
+      <div hidden="hidden">
+        <p class="field">
+          <label>
+            Turn your logo into a “silhouette”:
+            <input type="checkbox" id="silhouette"
+                   aria-describedby="silhouette-descr"/><span aria-hidden="true"></span>
+          </label>
+          <small id="silhouette-descr">
+            It will become white (except for transparent areas).
+            This matches the style of Microsoft icons.
+          </small>
+        </p>
+        <p class="field">
+          <label>
+            For realistic previews, set the color of the tile background:
+            <input type="color" id="bgcolor" aria-describedby="bgcolor-descr"
+                   pattern="#[a-fA-F0-9]{6}" size="8" minlength="7" maxlength="7"/>
+          </label>
+          <small id="bgcolor-descr">
+            The generated images will still use transparency.
+            This tool doesn’t make full-bleed icons.
+          </small>
+        </p>
+      </div>
+    </form>
+  </div>
+
+  <section hidden="hidden">
+    <output form="form">
+      <figure id="Square44x44Logo" aria-labelledby="Square44x44Logo-h">
+        <div>
+          <canvas role="img" data-width="44" data-height="44"
+                  data-inner-width-fraction=".75" data-inner-height-fraction=".75">
+            Preview of the 44×44 tile.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="Square44x44Logo-h">Square&#8203;44×44&#8203;Logo</h2>
+          <!-- &#8203; is Unicode U+200B “ZERO WIDTH SPACE”. -->
+          <a download="Square44x44Logo.scale-100.png">Scale 1×</a>
+          <a download="Square44x44Logo.scale-200.png">Scale 2×</a>
+          <a download="Square44x44Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <figure id="Square71x71Logo" aria-labelledby="Square71x71Logo-h">
+        <div>
+          <canvas role="img" data-width="71" data-height="71"
+                  data-inner-width-fraction=".50" data-inner-height-fraction=".50">
+            Preview of the 71×71 tile.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="Square71x71Logo-h">Square&#8203;71×71&#8203;Logo</h2>
+          <a download="Square71x71Logo.scale-100.png">Scale 1×</a>
+          <a download="Square71x71Logo.scale-200.png">Scale 2×</a>
+          <a download="Square71x71Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <figure id="Square150x150Logo" aria-labelledby="Square150x150Logo-h">
+        <div>
+          <canvas role="img" data-width="150" data-height="150"
+                  data-inner-width-fraction=".33" data-inner-height-fraction=".33">
+            Preview of the 150×150 tile.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="Square150x150Logo-h">Square&#8203;150×150&#8203;Logo</h2>
+          <a download="Square150x150Logo.scale-100.png">Scale 1×</a>
+          <a download="Square150x150Logo.scale-200.png">Scale 2×</a>
+          <a download="Square150x150Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <figure id="Square310x310Logo" aria-labelledby="Square310x310Logo-h">
+        <div>
+          <canvas role="img" data-width="310" data-height="310"
+                  data-inner-width-fraction=".33" data-inner-height-fraction=".33">
+            Preview of the 310×310 tile.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="Square310x310Logo-h">Square&#8203;310×310&#8203;Logo</h2>
+          <a download="Square310x310Logo.scale-100.png">Scale 1×</a>
+          <a download="Square310x310Logo.scale-200.png">Scale 2×</a>
+          <a download="Square310x310Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <figure id="Wide310x150Logo" aria-labelledby="Wide310x150Logo-h">
+        <div>
+          <canvas role="img" data-width="310" data-height="150"
+                  data-inner-width-fraction=".16" data-inner-height-fraction=".33">
+            Preview of the 310×150 tile.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="Wide310x150Logo-h">Wide&#8203;310×150&#8203;Logo</h2>
+          <a download="Wide310x150Logo.scale-100.png">Scale 1×</a>
+          <a download="Wide310x150Logo.scale-200.png">Scale 2×</a>
+          <a download="Wide310x150Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <!--
+          ⚠ It’s a violation of the HTML 5.2 specification to have
+          <figure>s as children of an <output>; only “phrasing content”
+          is allowed.
+          https://www.w3.org/TR/html52/sec-forms.html#the-output-element
+      -->
+    </output>
+
+    <button type="button" id="save" disabled="disabled">
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+        <line x1="12" y1="13" x2="1.5" y2="13"/>
+        <line x1="12" y1="13" x2="22.5" y2="13"/>
+        <line x1="12" y1="13" x2="12" y2="2.5"/>
+        <line x1="12" y1="13" x2="12" y2="23.5"/>
+      </svg>Save in your package
+    </button>
+
+    <a hidden="hidden" download="tile-icons.zip"></a>
+    <button type="button">
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+        <line x1="4" x2="20" y1="23" y2="23"/>
+        <g>
+          <line x1="12" x2="12" y1="1" y2="19"/>
+          <polyline points="12,8 12,19 23,19" transform="rotate(-45 12 19)"/>
+        </g>
+      </svg>Download <code>tile-icons.zip</code>
+    </button>
+  </section>
+</main>
+
+<script src="tile-icons.js" type="module"></script>
+<noscript>
+  ⚠ You need to <a href="https://enable-JavaScript.com" rel="external">enable JavaScript</a>.
+</noscript>
+
+<footer>
+  <p>
+    <small>
+      <a href="mailto:paul&#64;fragara.com?subject=PWA2UWP" rel="external author" lang="fr">
+        Paul</a> made this site in <time>2018</time>, when publishing
+      <a href="https://FreeSolitaire.win" rel="external">FreeSolitaire.win</a>
+      to the Microsoft Store.
+    </small>
+  </p>
+  <p>
+    <small>This site is not affiliated or endorsed by Microsoft.</small>
+  </p>
+</footer>
+
+</html>

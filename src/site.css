@@ -1,0 +1,135 @@
+/*******************************************************************************
+ * Styles common to all pages of the PWA2UWP website.
+ * @author Paul <paul@fragara.com>
+ * @license CC0-1.0
+ *******************************************************************************/
+
+/*******************************************************************************
+ * CSS variable & animation definitions.
+ */
+html {
+    --bg-white: #fbfbfb;
+    --bg-grey: #e7e8e8;
+    --fg-grey: #3c3c3c;
+
+    --horizon-space: calc(.5rem + .5vmin);
+
+    /* Used for everything interactable (<a>, <button>, <input>): */
+    --outline-style-hover: dotted;
+    --outline-style-focus: dashed;
+    --outline-style-active: solid;
+    --outline-offset: .0625em; /* = 1/16; there usually are 16px in 1em. */
+    --outline-width: .0625rem;
+
+    /* The following used only for <a> & <button>: */
+    --link-color: #00e;
+    --visited-color: #a00075;
+    --anim-focusvisible: outline .25s;
+    --filter-hoverfocus: brightness(125%);
+    --filter-active: saturate(50%);
+
+}
+@keyframes outline { /* inspired by https://github.com/NV/flying-focus */
+    from {
+        outline-offset: .25em;
+        outline-width: .1875rem;
+    }
+}
+@media (prefers-reduced-motion) {
+    @keyframes outline {
+        from {
+            outline-style: solid;
+        }
+    }
+}
+
+
+/*******************************************************************************
+ * General layout (vertical, with sticky footer) & skin (backgrounds).
+ */
+body {
+    background: var(--bg-grey); /* for overscroll on (at least) iOS 9.3 */
+    display: flex;
+    flex-direction: column;
+    margin: var(--if-supports-var, 0); /* related to --horizon-space */
+    min-height: 100vh;
+}
+main {
+    background: var(--bg-white);
+    flex: 1 0 auto;
+    padding: 0 var(--horizon-space) 1em;
+}
+footer {
+    background: var(--bg-grey);
+    display: flex;
+    flex: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: .75em 0 .85em; /* need plenty of space at the bottom for URL previews */
+}
+footer > p {
+    margin: .375em var(--horizon-space); /* flexbox children margins don’t collapse */
+}
+
+
+/*******************************************************************************
+ * Typography (more legible than user-agent defaults).
+ */
+html {
+    font: -apple-system-body; /* for size&weight; https://tinyurl.com/apple-system-font */
+    font-family: "segoe ui", system-ui, sans-serif;
+
+    letter-spacing: .05ch; /* https://tinyurl.com/spacing-dyslexia */
+    line-height: 1.5;
+    word-spacing: .15ch;
+}
+p,
+ul {
+    max-width: 85ch;
+}
+h1 {
+    line-height: 1.3;
+}
+h2 {
+    color: var(--fg-grey);
+    font-variant: small-caps;
+    font-weight: inherit;
+}
+:focus-within > h2 {
+    color: #111;
+}
+
+
+/*******************************************************************************
+ * Links.
+ */
+a {
+    color: var(--link-color);
+    outline-color: currentcolor;
+    outline-offset: var(--outline-offset);
+    outline-width: var(--outline-width);
+    touch-action: manipulation;
+}
+a:visited {
+    color: var(--visited-color);
+}
+a:hover,
+a:focus {
+    filter: var(--filter-hoverfocus);
+}
+a:hover {
+    outline-style: var(--outline-style-hover);
+}
+a:focus {
+    outline-style: var(--outline-style-focus);
+}
+a:focus-visible {
+    animation: var(--anim-focusvisible);
+}
+a:active {
+    filter: var(--filter-active);
+    outline-style: var(--outline-style-active);
+}
+a[rel~="external"]:active {
+    outline-width: .125rem;
+}

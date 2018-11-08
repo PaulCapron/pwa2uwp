@@ -1,0 +1,353 @@
+/*******************************************************************************
+ * Styles for JS-powered pages. Depend on variables declared in site.css.
+ * @author Paul <paul@fragara.com>
+ * @license CC0-1.0
+ *******************************************************************************/
+
+
+/*******************************************************************************
+ * Top navigation bar.
+ */
+
+nav {
+    align-items: center;
+    background: var(--bg-grey);
+    display: flex;
+    flex-wrap: wrap;
+    font-weight: bolder;
+    font-size: larger;
+    justify-content: space-between;
+    text-align: center;
+}
+nav > ul {
+    margin: 0;
+    padding: 0;
+}
+nav li,
+nav a {
+    display: inline-block;
+}
+nav li[aria-current],
+nav a {
+    padding: 0 .35em; /* fallback if CSS variables unsupported (IE) */
+    padding: .75rem var(--horizon-space);
+}
+nav [aria-current] {
+    background: var(--bg-white);
+    border: var(--outline-width) solid transparent;
+}
+nav a {
+    margin: var(--outline-width);
+    outline-offset: 0 !important;
+}
+
+a[rel=home] { /* only the main link to the homepage is marked as such */
+    text-decoration: none;
+}
+a[rel=home] > abbr {
+    background: linear-gradient(to bottom right, #f16529, #f16529 50%, #27b5f1 50%, #27b5f1);
+    color: #fff;
+    padding: 0 .125em .0625em;
+    text-shadow: 0 0 .125rem #111;
+    -ms-high-contrast-adjust: none;
+}
+a[rel=home] > abbr:first-of-type {
+    background: #f16529;
+}
+a[rel=home] > abbr:last-of-type {
+    background: #27b5f1;
+}
+
+.pkg { /* link to user package and status indicator */
+    padding: 0 var(--horizon-space);
+    text-decoration: none;
+}
+a.pkg > span {
+    text-decoration: underline;
+}
+.pkg > dl {
+    color: var(--fg-grey);
+    font-size: smaller;
+    font-weight: lighter;
+}
+.pkg > dl,
+.pkg dd {
+    margin: 0;
+}
+.pkg dt,
+.pkg dd {
+    display: inline-block;
+}
+.pkg dd + dt {
+    margin-left: .5em;
+}
+.iconstatus,
+.manifeststatus {
+    border-radius: 1.5em;
+    text-transform: uppercase;
+}
+dd.ok {
+    color: #050;
+}
+dd.miss {
+    color: #900;
+}
+
+/*dd*/.anim {
+    animation: tada .7s .07s;
+    background: radial-gradient(var(--bg-white), transparent);
+}
+@media (prefers-reduced-motion) {
+    .anim {
+        animation-duration: .3s;
+    }
+}
+@keyframes tada {
+    50% {
+        transform: scale(2.5) rotate(12deg);
+    }
+    75% {
+        transform: scale(2) rotate(-9deg);
+    }
+}
+
+@media (max-width: 50em) {
+    nav > ul {
+        display: none;
+    }
+    a[rel=home],
+    .pkg {
+        margin: var(--outline-width) auto;
+    }
+    .pkg {
+        background: var(--bg-white);
+    }
+}
+
+
+/*******************************************************************************
+ * General typesetting.
+ */
+
+main {
+    padding-top: 1em;
+}
+h1 {
+    font-weight: inherit;
+    margin-top: 0;
+}
+
+
+/*******************************************************************************
+ * Controls.
+ */
+
+/***************************************
+ * Push buttons.
+ */
+button {
+    background: #111; /* fallback if CSS variables unsupported (IE) */
+    background: var(--visited-color);
+    border: .0625rem solid transparent; /* for Windows High-Contrast mode */
+    border-radius: .125rem;
+    color: #fff;
+    font-family: inherit;
+    font-size: larger;
+    margin: .25em .0625rem;
+    padding: .5em 1em .6em;
+    outline-color: var(--visited-color);
+}
+a[download][hidden] + button {
+    background: var(--link-color);
+    outline-color: var(--link-color);
+}
+button:hover,
+button:focus {
+    filter: var(--filter-hoverfocus);
+}
+button:focus-visible {
+    animation: var(--anim-focusvisible);
+}
+button:active {
+    filter: var(--filter-active);
+}
+button::-moz-focus-inner {
+    border: none;
+}
+button > svg { /* icons */
+    fill: none;
+    height: 1.25em;
+    margin: 0 .5em 0 0;
+    stroke: currentcolor;
+    stroke-width: 1.75;
+    vertical-align: text-top;
+    width: 1.25em;
+}
+a[download][hidden] + button g {
+    transition: transform .2s;
+}
+a[download][hidden] + button:enabled:hover g,
+a[download][hidden] + button:focus g {
+    transform: translateY(.085em);
+}
+
+/***************************************
+ * Input elements.
+ *
+ * Regarding checkboxes, we actually hide the <input type=checkbox> and emulate
+ * them with a <span>. That way we can get better control on their styling.
+ * Yes, these silly hacks are still needed in 2018…!
+ */
+input,
+input[type=checkbox] + span[aria-hidden]::before { /* aria-hidden=true implied */
+    border: .0625rem solid #aaa;
+    border-bottom-color: #666;
+    border-right-color: #666;
+    border-radius: 0;
+    font-size: inherit;
+    padding: .0625em;
+}
+input[type=checkbox] + span[aria-hidden]::before,
+input[type=color] {
+    background: #fff;
+    color: #000;
+}
+input:hover,
+input:focus,
+input:active,
+input[type=checkbox]:focus + span[aria-hidden]::before,
+input[type=checkbox]:active + span[aria-hidden]::before,
+label:hover > span[aria-hidden]::before,
+label:active > span[aria-hidden]::before {
+    border-color: #aaa;
+    outline-color: #666;
+}
+input[type=checkbox] {
+    opacity: 0;
+    height: 1px;
+    margin: 0;
+    width: 1px;
+}
+input[type=checkbox] + span[aria-hidden]::before {
+    content: "";
+    display: inline-block;
+    font-size: 1.125em;
+    font-weight: initial;
+    height: 1em;
+    line-height: 1;
+    margin-right: .25em;
+    text-align: center;
+    vertical-align: text-top;
+    width: 1em;
+}
+input:checked + span[aria-hidden]::before {
+    content: "✔";
+}
+input[type=color] {
+    vertical-align: middle;
+    max-width: 3em;
+}
+input[type=color]::-webkit-color-swatch-wrapper {
+    padding: .0625em;
+}
+@media (max-width: 30em) {
+    input:not([type=checkbox]):not([type=color]) {
+        display: block;
+        max-width: 85vw;
+    }
+}
+
+/***************************************
+ * Common styles to all controls.
+ */
+button,
+input,
+input[type=checkbox] + span[aria-hidden]::before {
+    outline-offset: var(--outline-offset);
+    outline-width: var(--outline-width);
+    letter-spacing: inherit;
+    word-spacing: inherit;
+}
+button:hover,
+input:hover,
+label:hover > span[aria-hidden]::before {
+    outline-style: var(--outline-style-hover);
+}
+button:focus,
+input:focus,
+input[type=checkbox]:focus + span[aria-hidden]::before {
+    outline-style: var(--outline-style-focus);
+}
+button:active,
+input:active,
+input[type=checkbox]:active + span[aria-hidden]::before,
+label:active > span[aria-hidden]::before {
+    outline-style: var(--outline-style-active);
+}
+button,
+label {
+    touch-action: manipulation;
+}
+
+
+/*******************************************************************************
+ * Error/disabled/read-only states.
+ */
+button:disabled {
+    background: #fee !important;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    filter: none;
+    outline: none;
+}
+/* :read-only is unrecognized unprefixed by Firefox after 13 years (!),
+   (see https://bugzilla.mozilla.org/show_bug.cgi?id=312971), so cannot
+   merge this with the previous ruleset: */
+input:read-only {
+    background: #fee;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    outline: none;
+}
+input:invalid,
+noscript {
+   color: #a30;
+}
+noscript {
+    background: #fee;
+    border-top: dashed;
+    bottom: 0;
+    font-size: larger;
+    font-weight: bolder;
+    left: 0;
+    position: fixed;
+    padding: 3vh .65rem;
+    right: 0;
+    text-align: center;
+}
+
+
+/*******************************************************************************
+ * Fields & fieldsets.
+ */
+fieldset:focus-within,
+.field:focus-within,
+fieldset:active,
+.field:active {
+    background: #ffd;
+    box-shadow: -.15em 0 0 #ffd, .15em 0 0 #ffd;
+    transition: background .2s, box-shadow .2s;
+}
+fieldset > small,
+.field > small {
+    color: var(--fg-grey);
+    display: block;
+}
+fieldset:focus-within > small,
+.field:focus-within > small,
+fieldset:active > small,
+.field:active > small {
+    color: #111;
+}
