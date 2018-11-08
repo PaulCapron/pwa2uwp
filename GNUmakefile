@@ -28,10 +28,12 @@ dst/%.js: src/%.js src/app.js
 	java -jar aux/closure-compiler*.jar --language_out ES5_STRICT --charset UTF-8 --rewrite_polyfills false --isolation_mode IIFE --dependency_mode STRICT --entry_point src/$* --js_output_file $@ $^
 
 
-.PHONY: clean deps stage
+.PHONY: clean deps stage deploy
 
 clean: ; rm -rf dst
 
 deps: ; cd aux && ./grab-3p-deps.sh
 
 stage: dst; cd $< && python3 -m http.server
+
+deploy: dst; netlify deploy --prod --dir=$<
