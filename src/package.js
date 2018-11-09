@@ -108,7 +108,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
     const downloadBtn = downloadLink.nextElementSibling;
 
     if (document.documentMode !== undefined) { // navigating to a Blob doesn’t work on IE
-      downloadBtn.onclick = function() { navigator.msSaveOrOpenBlob(zip, zipFilename); };
+      downloadBtn.onclick = navigator.msSaveOrOpenBlob.bind(navigator, zip, zipFilename);
     } else {
       downloadLink.href = URL.createObjectURL(zip);
       downloadBtn.onclick = downloadLink.click.bind(downloadLink);
