@@ -170,8 +170,6 @@ function CentralDirectoryEndRecord(entryCount, size, offset) {
 }
 
 
-const EMPTY_BUF = new ArrayBuffer(0);
-
 /** A ZipEntry represents a file in a zip archive. */
 export class ZipEntry {
 
@@ -184,9 +182,6 @@ export class ZipEntry {
    */
   constructor(name, data, lastModif = new Date, isText = false, dataCRC = crc32(data)) {
     console.assert(/^[a-z0-9][a-z0-9/\-\.]{0,254}$/i.test(name), "Safe name", name);
-    if (name[name.length - 1] === "/") {
-      console.assert(data === EMPTY_BUF, "Only folder names end with '/'", name);
-    }
 
     const mtime = toDOSDatetime(lastModif);
 
@@ -211,17 +206,6 @@ export class ZipEntry {
     this.centralHead = CentralDirectoryFileHeader(
       name.length, mtime, dataCRC, data.byteLength, isText
     );
-  }
-
-  /** @return {!ZipEntry} A new folder entry (a somehow special empty entry).
-   *  To then add files to the folder, prefix their names by `${folderName}/`
-   *  when constructing their ZipEntry.
-   * @param {string} name   Folder name.
-   * @param {!Date=} lastModif  Date of last modification of the folder.
-   */
-  static folder(name, lastModif = new Date) {
-    console.assert(/^[a-z0-9][a-z0-9\-]{0,254}/i.test(name), "Valid folder name", name);
-    return new ZipEntry(name + "/", EMPTY_BUF, lastModif, false, 0);
   }
 
   /** @param {number} offset  The offset, in bytes, of the “local file header” in the archive. */

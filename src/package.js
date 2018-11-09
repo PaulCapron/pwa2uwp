@@ -66,7 +66,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
   const zipFilename = downloadLink.getAttribute("download");
   const folderName = zipFilename.substr(0, zipFilename.indexOf(".")) + "/";
 
-  const /** Array<!ZipEntry> */ zipEntries = [ZipEntry.folder(folderName)];
+  const /** Array<!ZipEntry> */ zipEntries = [];
 
   icons: {
     const DPR = (self.devicePixelRatio < 2) ? 1 : ((self.devicePixelRatio === 2) ? 2 : 4);
@@ -99,7 +99,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
         .insertRule(`img{background:${bgColor}}`, 0);
     }
 
-    if (zipEntries.length !== 16) return; // (some) icons are missing
+    if (zipEntries.length !== 15) return; // (some) icons are missing
     zipEntries.push(new ZipEntry(folderName + "appxmanifest.xml", toUTF8Buffer(manif)));
   }
 
