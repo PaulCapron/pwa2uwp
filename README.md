@@ -66,4 +66,7 @@ These third-party “development” dependencies are:
   * `LICENSE.txt`: licensing/copyright information for this repository.
   Everything is [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 
+  * `netlify.toml`: configuration for hosting on [Netlify](https://www.netlify.com).
+  Deploys are done manually.
+
   * `README.md`: this file.
