@@ -6,14 +6,14 @@ for = "/*"
 X-Frame-Options = "DENY"
 Referrer-Policy = "origin"
 Access-Control-Allow-Origin = "*"
-Cache-Control = "max-age=43200, stale-while-revalidate=43200, stale-if-error=86400"
+Cache-Control = "public, max-age=43200, stale-while-revalidate=43200, stale-if-error=86400"
 
 [[headers]]
 for = "/*.ico"
 [headers.values]
-Cache-Control = "immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
+Cache-Control = "public, immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
 
 [[headers]]
 for = "/*.png"
 [headers.values]
-Cache-Control = "immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
+Cache-Control = "public, immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
