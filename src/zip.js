@@ -118,22 +118,22 @@ export function CentralDirectoryFileHeader(
 ) {
   const data = new DataView(new ArrayBuffer(46));
 
-  data.setUint32( 0,         0x02014B50, true); // central file header signature
-  data.setUint8(  4,                 63      ); // version made by, lower byte (6.3)
-//data.setUint8(  5,                  0      ); // version made by, upper byte (DOS)
-  data.setUint16( 6,                 20, true); // version needed to extract (≥2.0)
-//data.setUint16( 8,                  0      ); // general purpose bit flag (no flag)
-//data.setUint16(10,                  0      ); // compression method (none)
-  data.setUint32(12,      modifDatetime, true); // last mod file date and time
-  data.setUint32(16,            dataCRC, true); // crc-32
-  data.setUint32(20,         dataLength, true); // compressed size
-  data.setUint32(24,         dataLength, true); // uncompressed size
-  data.setUint16(28,         nameLength, true); // file name length
-//data.setUint16(30,                  0      ); // extra field length (no extra)
-//data.setUint16(32,                  0      ); // file comment length (no comment)
-//data.setUint16(34,                  0      ); // disk number start (first one)
+  data.setUint32( 0,     0x02014B50, true); // central file header signature
+  data.setUint8(  4,             63      ); // version made by, lower byte (6.3)
+//data.setUint8(  5,              0      ); // version made by, upper byte (DOS)
+  data.setUint16( 6,             20, true); // version needed to extract (≥2.0)
+//data.setUint16( 8,              0      ); // general purpose bit flag (no flag)
+//data.setUint16(10,              0      ); // compression method (none)
+  data.setUint32(12,  modifDatetime, true); // last mod file date and time
+  data.setUint32(16,        dataCRC, true); // crc-32
+  data.setUint32(20,     dataLength, true); // compressed size
+  data.setUint32(24,     dataLength, true); // uncompressed size
+  data.setUint16(28,     nameLength, true); // file name length
+//data.setUint16(30,              0      ); // extra field length (no extra)
+//data.setUint16(32,              0      ); // file comment length (no comment)
+//data.setUint16(34,              0      ); // disk number start (first one)
   data.setUint16(36, Number(isText), true); // internal file attributes
-//data.setUint32(38,                  0      ); // external file attributes (unused)
+//data.setUint32(38,              0      ); // external file attributes (unused)
   if (opt_localHeaderOffset) {
     data.setUint32(42, opt_localHeaderOffset, true); // offset of local header
   }
