@@ -3,10 +3,8 @@
  * @see https://docs.microsoft.com/uwp/schemas/appxpackage/appx-package-manifest
  * @author Paul <paul@fragara.com>
  * @license CC0-1.0
- *  To the extent possible under law, the author has dedicated all copyright
- *  and related and neighboring rights to this software to the public domain
- *  worldwide. This software is distributed without any warranty.
- *  For more information, see https://creativecommons.org/publicdomain/zero/1.0/
+ *  The author has dedicated all rights to this software to the public domain.
+ *  This software is distributed without any warranty.
  */
 
 import { database, saveManifest } from "./app.js";
