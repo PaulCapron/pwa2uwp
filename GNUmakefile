@@ -1,3 +1,5 @@
+ORIGIN ?= https://pwa2uwp.fragara.com
+
 .DELETE_ON_ERROR:
 
 dst: dst/index.html \
@@ -16,7 +18,7 @@ dst/tile-icons.html dst/appx-manifest.html dst/package.html: dst/%.html: dst/%.j
 
 dst/%.html: src/%.html src/site.css aux/postprod.xsl
 	@mkdir -p $(dir $@)
-	java -jar aux/saxon9he.jar -o:$@ -s:$< -xsl:$(word 3,$^) basecssuri="file:$(CURDIR)/src/" basejsuri="file:$(CURDIR)/dst/"
+	java -jar aux/saxon9he.jar -o:$@ -s:$< -xsl:$(word 3,$^) basecssuri="file:$(CURDIR)/src/" basejsuri="file:$(CURDIR)/dst/" siteorigin="$(ORIGIN)"
 	java -jar aux/htmlcompressor*.jar --compress-css --simple-bool-attr --simple-doctype --remove-surrounding-spaces html,meta,link,style,script,noscript -o $@ $@
 
 .INTERMEDIATE: dst/tile-icons.js dst/appx-manifest.js dst/package.js

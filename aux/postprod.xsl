@@ -24,6 +24,15 @@
     </element>
   </template>
 
+  <!-- Absolutize the required/recommended URLs. -->
+  <param name="siteorigin"/>
+  <template match="link[tokenize(@rel) = 'canonical']/@href |
+                   meta[tokenize(@property) = ('og:url', 'og:image')]/@content">
+    <attribute name="{name()}">
+      <value-of select="resolve-uri(., $siteorigin)"/>
+    </attribute>
+  </template>
+
   <!-- Canonicalize the URL of homepage links. -->
   <template match="@href[. = 'index.html']">
     <attribute name="href">
