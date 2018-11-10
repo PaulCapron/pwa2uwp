@@ -26,6 +26,7 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
   <Applications>
     <Application Id="" StartPage="">
       <uap:VisualElements DisplayName="" Description=""  BackgroundColor="" Square150x150Logo="" Square44x44Logo="">
+        <uap:DefaultTile/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
           <uap:Rotation Preference="portrait"/>
@@ -74,6 +75,7 @@ function generateManifest(data) {
   const uriRulesElt = appElt.querySelector("ApplicationContentUriRules");
   const ruleElt = uriRulesElt.querySelector("Rule");
   const visualElt = appElt.querySelector("VisualElements");
+  const defaultTileElt = visualElt.querySelector("DefaultTile");
   const rotPrefElt = visualElt.querySelector("InitialRotationPreference");
   const landscapeRotElt = rotPrefElt.firstElementChild;
   const portraitRotElt = landscapeRotElt.nextElementSibling;
@@ -107,12 +109,28 @@ function generateManifest(data) {
     }
   }
   fill_iconography: {
-    const { storeLogoPath, square44x44LogoPath, square150x150LogoPath, bgColor } = data;
+    const { storeLogo, square44x44Logo, square150x150Logo, bgColor } = data;
+    const { square71x71Logo, square310x310Logo, wide310x150Logo } = data;
 
-    logoElt.textContent = storeLogoPath;
-    visualElt.setAttribute("Square44x44Logo", square44x44LogoPath);
-    visualElt.setAttribute("Square150x150Logo", square150x150LogoPath);
+    logoElt.textContent = storeLogo;
+    visualElt.setAttribute("Square44x44Logo", square44x44Logo);
+    visualElt.setAttribute("Square150x150Logo", square150x150Logo);
     visualElt.setAttribute("BackgroundColor", bgColor);
+
+    if (!square71x71Logo && !square310x310Logo && !wide310x150Logo) {
+      visualElt.removeChild(defaultTileElt.previousSibling); // whitespace text node
+      visualElt.removeChild(defaultTileElt);
+    } else {
+      if (square71x71Logo) {
+        defaultTileElt.setAttribute("Square71x71Logo", square71x71Logo);
+      }
+      if (square310x310Logo) {
+        defaultTileElt.setAttribute("Square310x310Logo", square310x310Logo);
+      }
+      if (wide310x150Logo) {
+        defaultTileElt.setAttribute("Wide310x150Logo", wide310x150Logo);
+      }
+    }
   }
   fill_microsoft_store_ids: {
     const { publisher, publisherDisplayName, reservedName, pkgIdentityName } = data;
@@ -161,6 +179,19 @@ const downloadLink = saveBtn.nextElementSibling;
 const downloadBtn = downloadLink.nextElementSibling;
 
 formElt.querySelector("button[type='submit']").disabled = false;
+
+document.getElementById("useOwnIconPaths").onchange = function() {
+  for (
+    let inputElt, labelElt = this.parentNode.nextElementSibling;
+    labelElt !== null && (inputElt = labelElt.firstElementChild);
+    labelElt = labelElt.nextElementSibling
+  ) {
+    inputElt.readOnly = this.checked;
+    if (this.checked) {
+      inputElt.value = inputElt.getAttribute("value"); // reset to initial
+    }
+  }
+};
 
 database.then(function() {
   saveBtn.disabled = false;

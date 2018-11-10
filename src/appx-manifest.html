@@ -79,6 +79,9 @@
     display: block;
     text-align: right;
   }
+  #iconography label:not(:first-child) { /* icon paths */
+   font-size: smaller;
+  }
 
   #output {
     margin: 0 auto;
@@ -318,27 +321,60 @@
 
         <div class="field">
           <label>
-            Path to store icon:
-            <input type="text" id="storeLogoPath" aria-describedby="path-descr"
-                   spellcheck="false" size="30" minlength="1" maxlength="256"
-                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
-                   required="required"/>
+            <input type="checkbox" id="useOwnIconPaths" checked="checked"
+                   /><span aria-hidden="true"></span>
+            Use same icon paths than the tile icons generator
           </label>
 
           <label>
-            Path to small tile icon:
-            <input type="text" id="square44x44LogoPath" aria-describedby="path-descr"
+            Path to Store icon:
+            <input type="text" id="storeLogo" aria-describedby="path-descr"
                    spellcheck="false" size="30" minlength="1" maxlength="256"
                    pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
-                   required="required"/>
+                   value="Square150x150Logo.png" readonly="readonly" required="required"/>
           </label>
 
           <label>
-            Path to medium tile icon:
-            <input type="text" id="square150x150LogoPath" aria-describedby="path-descr"
+            Path to 44×44 icon:
+            <input type="text" id="square44x44Logo" aria-describedby="path-descr"
                    spellcheck="false" size="30" minlength="1" maxlength="256"
                    pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
-                   required="required"/>
+                   value="Square44x44Logo.png" readonly="readonly" required="required"/>
+          </label>
+
+          <label>
+            Path to 71×71 icon:
+            <input type="text" id="square71x71Logo" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   value="Square71x71Logo.png" readonly="readonly"/>
+            <small>optional</small>
+          </label>
+
+          <label>
+            Path to 150×150 icon:
+            <input type="text" id="square150x150Logo" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   value="Square150x150Logo.png" readonly="readonly" required="required"/>
+          </label>
+
+          <label>
+            Path to 310×310 icon:
+            <input type="text" id="square310x310Logo" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   value="Square310x310Logo.png" readonly="readonly"/>
+            <small>optional</small>
+          </label>
+
+          <label>
+            Path to 310×150 icon:
+            <input type="text" id="wide310x150Logo" aria-describedby="path-descr"
+                   spellcheck="false" size="30" minlength="1" maxlength="256"
+                   pattern='[^&lt;>:"\|\?\*\/\\][^&lt;>:"\|\?\*]*\.(?:jpe?|pn)g'
+                   value="Wide310x150Logo.png" readonly="readonly"/>
+            <small>optional</small>
           </label>
 
           <small id="path-descr">
