@@ -17,15 +17,15 @@ import { database, saveManifest } from "./app.js";
  */
 const MANIFEST_MOTHER = (new DOMParser).parseFromString(
 `<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
-  <Identity Name="" Publisher="" Version="" ProcessorArchitecture="neutral"/>
+  <Identity ProcessorArchitecture="neutral"/>
   <Properties>
     <DisplayName/>
     <PublisherDisplayName/>
     <Logo/>
   </Properties>
   <Applications>
-    <Application Id="" StartPage="">
-      <uap:VisualElements DisplayName="" Description=""  BackgroundColor="" Square150x150Logo="" Square44x44Logo="">
+    <Application Id="WebApp">
+      <uap:VisualElements>
         <uap:DefaultTile/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
@@ -35,7 +35,7 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
         </uap:InitialRotationPreference>
       </uap:VisualElements>
       <uap:ApplicationContentUriRules>
-        <uap:Rule Type="include" WindowsRuntimeAccess="all" Match=""/>
+        <uap:Rule Type="include" WindowsRuntimeAccess="all"/>
       </uap:ApplicationContentUriRules>
     </Application>
   </Applications>
@@ -43,7 +43,7 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
     <Capability Name="internetClient"/>
   </Capabilities>
   <Resources>
-    <Resource Language=""/>
+    <Resource/>
   </Resources>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10240.0" MaxVersionTested="10.0.17763.0"/>
@@ -113,9 +113,9 @@ function generateManifest(data) {
     const { square71x71Logo, square310x310Logo, wide310x150Logo } = data;
 
     logoElt.textContent = storeLogo;
+    visualElt.setAttribute("BackgroundColor", bgColor);
     visualElt.setAttribute("Square44x44Logo", square44x44Logo);
     visualElt.setAttribute("Square150x150Logo", square150x150Logo);
-    visualElt.setAttribute("BackgroundColor", bgColor);
 
     if (!square71x71Logo && !square310x310Logo && !wide310x150Logo) {
       visualElt.removeChild(defaultTileElt.previousSibling); // whitespace text node
@@ -157,7 +157,6 @@ function generateManifest(data) {
       appElt.removeChild(uriRulesElt);
     }
     appElt.setAttribute("StartPage", url);
-    appElt.setAttribute("Id", "WebApp"); // has to be unique only within the pkg
     resourceElt.setAttribute("Language", lang);
     visualElt.setAttribute("Description", description);
     visualElt.setAttribute("DisplayName", displayName);
