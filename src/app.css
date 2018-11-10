@@ -205,6 +205,7 @@ input[type=checkbox] + span[aria-hidden]::before { /* aria-hidden=true implied *
     border-right-color: #666;
     border-radius: 0;
     font-size: inherit;
+    max-width: 95vw;
     padding: .0625em;
 }
 input[type=checkbox] + span[aria-hidden]::before,
