@@ -1,5 +1,6 @@
 /**
  * @file Generate a Windows 10 app package manifest for a web-based application.
+ * @see appx-manifest.html The document this file scripts and depends on.
  * @see https://docs.microsoft.com/uwp/schemas/appxpackage/appx-package-manifest
  * @author Paul <paul@fragara.com>
  * @license CC0-1.0

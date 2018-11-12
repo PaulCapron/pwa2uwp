@@ -1,5 +1,6 @@
 /**
  * @file Generate tile icons for a Windows 10 application.
+ * @see tile-icons.html The document this file scripts and depends on.
  * @see https://docs.microsoft.com/windows/uwp/design/shell/tiles-and-notifications/app-assets
  * @author Paul <paul@fragara.com>
  * @since 2018

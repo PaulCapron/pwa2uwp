@@ -1,5 +1,6 @@
 /**
  * @file Display a summary of the generated UWP app package, and make it downloadable.
+ * @see package.html The document this file scripts and depends on.
  * @see https://docs.microsoft.com/windows/uwp/packaging/
  * @author Paul <paul@fragara.com>
  * @since 2018
