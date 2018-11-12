@@ -12,8 +12,9 @@ import { database, saveManifest } from "./app.js";
 
 
 /** The “mother” of all manifest documents.
- * It is itself immutable. We clone it everytime we generate a manifest.
- * That’s a bit inefficient, but this avoids state incoherencies.
+ * It is itself immutable. It’s cloned each time the user submits the form;
+ * the clone gets filled with <input> data, then it’s serialized to string.
+ * ⚠ Whitespace is significant.
  * @const {Document}
  */
 const MANIFEST_MOTHER = (new DOMParser).parseFromString(
@@ -52,16 +53,11 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
 </Package>`, "text/xml");
 
 
-/** Used to “stringify” manifest documents.
- * @const {!XMLSerializer}
- */
-const serializer = new XMLSerializer;
-
-
 /** Generate a Windows 10 app package manifest.
  * ⚠ The caller is responsible for input validation.
  *
  * @param {!Object<string,(string|boolean|number)>} data  Data to fill the manifest.
+ *  The keys are the same than the DOM <input> ids.
  * @return {string} The XML manifest, as a pretty-formatted string.
  */
 function generateManifest(data) {
@@ -83,7 +79,29 @@ function generateManifest(data) {
   const landscapeFlippedRotElt = portraitRotElt.nextElementSibling;
   const portraitFlippedRotElt = landscapeFlippedRotElt.nextElementSibling;
 
-  fill_orientations: {
+  basics: {
+    const { displayName, description, lang, url } = data;
+    const { majorVersion, minorVersion, buildVersion, revisionVersion } = data;
+
+    appElt.setAttribute("StartPage", url);
+    resourceElt.setAttribute("Language", lang);
+    visualElt.setAttribute("Description", description);
+    visualElt.setAttribute("DisplayName", displayName);
+    identityElt.setAttribute(
+      "Version", `${majorVersion}.${minorVersion}.${buildVersion}.${revisionVersion}`
+    );
+    if (url.indexOf("https://") === 0) { // IE 11 doesn’t have “new URL()”
+      const pathIndex = url.indexOf("/", "https://*".length);
+      const origin = (pathIndex === -1) ? url : url.substring(0, pathIndex);
+
+      ruleElt.setAttribute("Match", origin + "/*");
+    } else {
+      //TODO: check doc accurancy “http:// fails validation”. What about “ms-appx-web://”?
+      appElt.removeChild(uriRulesElt.previousSibling); // whitespace text node
+      appElt.removeChild(uriRulesElt);
+    }
+  }
+  orientations: {
     const { landscapeOrientation, landscapeFlippedOrientation } = data;
     const { portraitOrientation, portraitFlippedOrientation } = data;
 
@@ -92,7 +110,7 @@ function generateManifest(data) {
       /* No orientation explicitely given = all orientations are supported. */
     } else {
       if (!landscapeOrientation) {
-        rotPrefElt.removeChild(landscapeRotElt.previousSibling);
+        rotPrefElt.removeChild(landscapeRotElt.previousSibling); // whitespace text node
         rotPrefElt.removeChild(landscapeRotElt);
       }
       if (!landscapeFlippedOrientation) {
@@ -100,7 +118,7 @@ function generateManifest(data) {
         rotPrefElt.removeChild(landscapeFlippedRotElt);
       }
       if (!portraitOrientation) {
-        rotPrefElt.removeChild(portraitRotElt.previousSibling); // whitespace text node
+        rotPrefElt.removeChild(portraitRotElt.previousSibling);
         rotPrefElt.removeChild(portraitRotElt);
       }
       if (!portraitFlippedOrientation) {
@@ -109,7 +127,7 @@ function generateManifest(data) {
       }
     }
   }
-  fill_iconography: {
+  iconography: {
     const { storeLogo, square44x44Logo, square150x150Logo, bgColor } = data;
     const { square71x71Logo, square310x310Logo, wide310x150Logo } = data;
 
@@ -122,18 +140,12 @@ function generateManifest(data) {
       visualElt.removeChild(defaultTileElt.previousSibling); // whitespace text node
       visualElt.removeChild(defaultTileElt);
     } else {
-      if (square71x71Logo) {
-        defaultTileElt.setAttribute("Square71x71Logo", square71x71Logo);
-      }
-      if (square310x310Logo) {
-        defaultTileElt.setAttribute("Square310x310Logo", square310x310Logo);
-      }
-      if (wide310x150Logo) {
-        defaultTileElt.setAttribute("Wide310x150Logo", wide310x150Logo);
-      }
+      if (square71x71Logo) defaultTileElt.setAttribute("Square71x71Logo", square71x71Logo);
+      if (square310x310Logo) defaultTileElt.setAttribute("Square310x310Logo", square310x310Logo);
+      if (wide310x150Logo) defaultTileElt.setAttribute("Wide310x150Logo", wide310x150Logo);
     }
   }
-  fill_microsoft_store_ids: {
+  microsoft_store_ids: {
     const { publisher, publisherDisplayName, reservedName, pkgIdentityName } = data;
 
     displayNameElt.textContent = reservedName;
@@ -141,32 +153,7 @@ function generateManifest(data) {
     identityElt.setAttribute("Name", pkgIdentityName);
     identityElt.setAttribute("Publisher", publisher);
   }
-  fill_the_rest: {
-    const { displayName, description, lang, url } = data;
-    const { majorVersion, minorVersion, buildVersion, revisionVersion } = data;
-
-    if (url.indexOf("https://") === 0) {
-      const pathIndex = url.indexOf("/", "https://*".length);
-
-      ruleElt.setAttribute(
-        "Match",
-        ((pathIndex === -1) ? url : url.substring(0, pathIndex)) + "/*"
-      );
-    } else {
-      //TODO: check doc accurancy “http:// fails validation”. What about “ms-appx-web://”?
-      appElt.removeChild(uriRulesElt.previousSibling); // whitespace text node
-      appElt.removeChild(uriRulesElt);
-    }
-    appElt.setAttribute("StartPage", url);
-    resourceElt.setAttribute("Language", lang);
-    visualElt.setAttribute("Description", description);
-    visualElt.setAttribute("DisplayName", displayName);
-    identityElt.setAttribute(
-      "Version",
-      `${majorVersion}.${minorVersion}.${buildVersion}.${revisionVersion}`
-    );
-  }
-  return serializer.serializeToString(manif) + "\n";
+  return (new XMLSerializer).serializeToString(manif) + "\n";
 }
 
 

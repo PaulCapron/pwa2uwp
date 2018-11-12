@@ -123,7 +123,9 @@ export const database = new Promise(function(resolve, reject) {
 });
 
 
-/** @const {!Promise<!Object<string,!Uint8Array>>} The tile icons stored in the database. */
+/** @const {!Promise<!Object<string,!Uint8Array>>} The tile icons stored in the database.
+ * The object will be empty if no icon are stored.
+ */
 export const savedIcons = new Promise(function(resolve, reject) {
   database.then(function(db) {
     const icons = {};
