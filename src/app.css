@@ -4,16 +4,13 @@
  * @license CC0-1.0
  *******************************************************************************/
 
-
 /*******************************************************************************
  * Top navigation bar.
  */
-
 nav {
     align-items: center;
     background: var(--bg-grey);
     display: flex;
-    flex-wrap: wrap;
     font-weight: bolder;
     font-size: larger;
     justify-content: space-between;
@@ -41,9 +38,14 @@ nav a {
     outline-offset: 0 !important;
 }
 
-a[rel=home] { /* only the main link to the homepage is marked as such */
+a[rel=home], /* main logo link to the homepage */
+.pkg /* link to user package and status indicator */ {
+    overflow: hidden;
     text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 a[rel=home] > abbr {
     background: linear-gradient(to bottom right, #f16529, #f16529 50%, #27b5f1 50%, #27b5f1);
     color: #fff;
@@ -58,9 +60,8 @@ a[rel=home] > abbr:last-of-type {
     background: #27b5f1;
 }
 
-.pkg { /* link to user package and status indicator */
+.pkg {
     padding: 0 var(--horizon-space);
-    text-decoration: none;
 }
 a.pkg > span {
     text-decoration: underline;
@@ -92,7 +93,6 @@ dd.ok {
 dd.miss {
     color: #900;
 }
-
 /*dd*/.anim {
     animation: tada .7s .07s;
     background: radial-gradient(var(--bg-white), transparent);
@@ -112,6 +112,9 @@ dd.miss {
 }
 
 @media (max-width: 50em) {
+    nav {
+        flex-wrap: wrap;
+    }
     nav > ul {
         display: none;
     }
@@ -290,7 +293,6 @@ label {
     touch-action: manipulation;
 }
 
-
 /*******************************************************************************
  * Error/disabled/read-only states.
  */
@@ -327,7 +329,6 @@ noscript {
     right: 0;
     text-align: center;
 }
-
 
 /*******************************************************************************
  * Fields & fieldsets.
