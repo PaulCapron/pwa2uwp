@@ -48,7 +48,7 @@
   div[role=img] > div {
     color: #fff;
     display: inline-block;
-    font-size: calc(2em + .75vmin);
+    font-size: calc(2em - -.75vmin); /* dble-neg: https://github.com/yui/yuicompressor/issues/59 */
     font-weight: bolder;
     height: 1.525em;
     margin: 0 auto;

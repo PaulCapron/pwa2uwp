@@ -12,7 +12,8 @@ html {
     --bg-grey: #e7e8e8;
     --fg-grey: #3c3c3c;
 
-    --horizon-space: calc(.5rem + .5vmin);
+    --horizon-space: calc(.5rem - -.5vmin); /* double-negation to work around
+                                               https://github.com/yui/yuicompressor/issues/59 */
 
     /* Used for everything interactable (<a>, <button>, <input>): */
     --outline-style-hover: dotted;
