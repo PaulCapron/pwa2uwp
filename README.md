@@ -31,7 +31,7 @@ These third-party “development” dependencies are:
   * [**Saxon-HE 9.8**](http://saxon.sourceforge.net/#F9.8HE),
   a XSLT 2 processor, to embed CSS/JS code directly into the HTML & more.  
   Put in the `aux/` folder, named `saxon9he.jar`.  
-  On Ubuntu, you can `apt install` the `libsaxonhe-java` package,
+  On Ubuntu ≥18.04, you can `apt install` the `libsaxonhe-java` package,
   then symlink `/usr/share/java/Saxon-HE.jar` to `aux/saxon9he.jar`.
 
   * The [**Closure Compiler**](https://github.com/google/closure-compiler),
