@@ -71,13 +71,12 @@ footer > p {
     margin: .375em var(--horizon-space); /* flexbox children margins don’t collapse */
 }
 
-
 /*******************************************************************************
  * Typography (more legible than user-agent defaults).
  */
 html {
     font: -apple-system-body; /* for size&weight; https://tinyurl.com/apple-system-font */
-    font-family: "segoe ui", system-ui, sans-serif;
+    font-family: "segoe ui", ubuntu, cantarell, "trebuchet ms", sans-serif;
 
     letter-spacing: .05ch; /* https://tinyurl.com/spacing-dyslexia */
     line-height: 1.5;
