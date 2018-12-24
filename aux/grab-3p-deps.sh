@@ -40,7 +40,7 @@ download_extract() {
 [ -f saxon9he.jar ] || download_extract "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.8/SaxonHE9-8-0-12J.zip" saxon9he.jar
 echo "$0: saxon9he.jar: OK"
 
-[ -f closure-compiler*.jar ] || download_extract "https://dl.google.com/closure-compiler/compiler-20181008.zip" closure-compiler-v20181008.jar
+[ -f closure-compiler*.jar ] || download_extract "https://dl.google.com/closure-compiler/compiler-20181210.zip" closure-compiler-v20181210.jar
 echo "$0: closure-compiler*.jar: OK"
 
 [ -f htmlcompressor*.jar ] || download "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/htmlcompressor/htmlcompressor-1.5.3.jar"
