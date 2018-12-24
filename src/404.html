@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <style>
+    body { font-size: larger; text-align: center }
+    a { font-weight: bolder }
+    code:not(:empty):before { content: "("; font-family: initial }
+    code:not(:empty):after { content: ")"; font-family: initial }
+  </style>
+
+  <title>Not Found</title>
+  <h1>😞 <abbr>HTTP</abbr> 404 💔</h1>
+
+  <p>The requested resource <code id="url"></code> could not be found.</p>
+  <script>url.textContent=location</script>
+
+  <a href="/">Go to the site homepage</a>
