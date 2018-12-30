@@ -8,12 +8,17 @@ dst: dst/index.html \
 	dst/package.html \
 	dst/404.html \
 	dst/robots.txt \
+	dst/sitemap.txt \
 	dst/favicon.ico \
 	dst/apple-touch-icon.png
 
-dst/robots.txt: ; touch $@
-
 dst/%: src/%; cp $< $@
+
+dst/robots.txt: ; echo "Sitemap: $(ORIGIN)/sitemap.txt" >$@
+
+dst/sitemap.txt:
+	echo "$(ORIGIN)/" >$@
+	for page in tile-icons appx-manifest package; do echo "$(ORIGIN)/$$page.html" >>$@; done
 
 dst/404.html: src/404.html
 	java -jar aux/htmlcompressor*.jar --compress-css --remove-quotes --remove-intertag-spaces -o $@ $<
