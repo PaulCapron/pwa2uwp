@@ -6,14 +6,19 @@ for = "/*"
 X-Frame-Options = "DENY"
 Referrer-Policy = "origin"
 Access-Control-Allow-Origin = "*"
-Cache-Control = "public, max-age=43200, stale-while-revalidate=43200, stale-if-error=86400"
+Cache-Control = "public, max-age=100000, stale-while-revalidate=100000, stale-if-error=200000"
+
+[[headers]]
+for = "/*.html" # JS-powered pages; cache less to avoid IndexedDB mismatch, etc.
+[headers.values]
+Cache-Control = "public, max-age=50000, stale-while-revalidate=50000, stale-if-error=150000"
 
 [[headers]]
 for = "/*.ico"
 [headers.values]
-Cache-Control = "public, immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
+Cache-Control = "public, immutable, max-age=1000000, stale-while-revalidate=1000000, stale-if-error=1000000"
 
 [[headers]]
 for = "/*.png"
 [headers.values]
-Cache-Control = "public, immutable, max-age=864000, stale-while-revalidate=864000, stale-if-error=864000"
+Cache-Control = "public, immutable, max-age=1000000, stale-while-revalidate=1000000, stale-if-error=1000000"
