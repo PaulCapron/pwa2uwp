@@ -85,7 +85,6 @@ a.pkg > span {
 }
 .iconstatus,
 .manifeststatus {
-    border-radius: 1.5em;
     text-transform: uppercase;
 }
 dd.ok {

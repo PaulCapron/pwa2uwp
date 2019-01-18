@@ -36,18 +36,19 @@
     padding: .425em .6em;
   }
   summary > span {
-    color: #fff;
+    border: .0625em dotted;
+    border-radius: 1em;
     font-weight: bolder;
     min-width: 8ch;
     padding: .125em .5em;
     text-align: center;
   }
   span.ok {
-    background: #061;
-    color: var(--bg-white);
+    color: #061;
   }
   span.miss {
-    background: #a30;
+    border-style: dashed;
+    color: #a30;
   }
   span.miss::before {
     content: "⚠️ ";
