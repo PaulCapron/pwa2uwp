@@ -74,15 +74,15 @@ function setStatus(elts, present, animate) {
     elt.classList.remove((present) ? "miss" : "ok");
     if (animate) {
       console.assert(elts.length === 1, "Animate only one element", elts);
-      const pkgLink = elt.parentNode.parentNode;
 
       elt.addEventListener( // elt.onanimationend does not work in Chrome (!?)
         "animationend", function() { this.classList.remove("anim"); }, { "once": true }
       );
       elt.classList.add("anim");
       elt.setAttribute("role", "status");
-      pkgLink.focus({ "preventScroll": true });
-      pkgLink.scrollIntoView({ "behavior": "smooth" });
+
+      const pkgLink = elt.parentNode.parentNode;
+      pkgLink.focus();
     }
   }
 }
