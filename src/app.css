@@ -193,6 +193,13 @@ a[download][hidden] + button:enabled:hover g,
 a[download][hidden] + button:focus g {
     transform: translateY(.085em);
 }
+@media (max-width: 30em) {
+    button {
+        min-height: 3em;
+        width: 100%;
+    }
+}
+
 
 /***************************************
  * Input elements.
