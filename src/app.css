@@ -87,10 +87,10 @@ a.pkg > span {
 .manifeststatus {
     text-transform: uppercase;
 }
-dd.ok {
+.ok {
     color: #050;
 }
-dd.miss {
+.miss {
     color: #900;
 }
 /*dd*/.anim {
