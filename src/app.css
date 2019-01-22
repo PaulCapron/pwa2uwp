@@ -303,18 +303,15 @@ label {
  */
 button:disabled {
     background: #fee !important;
-    border-color: #ccc;
-    color: #666;
+    border-color: #edd;
+    color: #766;
     cursor: not-allowed;
     filter: none;
     outline: none;
 }
-/* :read-only is unrecognized unprefixed by Firefox after 13 years (!),
-   (see https://bugzilla.mozilla.org/show_bug.cgi?id=312971), so cannot
-   merge this with the previous ruleset: */
 input:read-only {
     background: #f5f5f5;
-    border-color: #ccc;
+    border-color: #aaa;
     color: #666;
     outline: none;
 }
