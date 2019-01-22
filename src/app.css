@@ -151,8 +151,6 @@ h1 {
 button {
     background: #111; /* fallback if CSS variables unsupported (IE) */
     background: var(--visited-color);
-    border: .0625rem solid transparent; /* for Windows High-Contrast mode */
-    border-radius: .125rem;
     color: #fff;
     font-family: inherit;
     font-size: larger;
@@ -303,7 +301,6 @@ label {
  */
 button:disabled {
     background: #fee !important;
-    border-color: #edd;
     color: #766;
     cursor: not-allowed;
     filter: none;
