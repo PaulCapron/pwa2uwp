@@ -30,27 +30,23 @@
   summary > a,
   summary > span {
     float: right;
+    padding: .425em .6em;
   }
   summary > a {
     margin: 0 .125em;
-    padding: .425em .6em;
   }
   summary > span {
-    border: .0625em dotted;
-    border-radius: 1em;
     font-weight: bolder;
     min-width: 8ch;
-    padding: .125em .5em;
+    padding-right: 0;
     text-align: center;
   }
-  span.miss {
-    border-style: dashed;
+  summary > span::before {
+    speak: none; /* oldest spec, never actually implemented */
+    speak: never; /* old spec, never actually implemented */
   }
-  span.miss::before {
-    content: "⚠️ ";
-    speak: none;
-    speak: never;
-  }
+  span.ok::before { content: "✔️ "; }
+  span.miss::before { content: "⚠️ "; }
 
   h1 {
     text-align: center;
@@ -65,7 +61,6 @@
     margin: .3rem 0;
   }
 
-  summary > span,
   img,
   textarea {
     margin: .3rem 0;
