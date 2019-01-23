@@ -7,10 +7,10 @@
 <title property="schema:name dc:title">The PWA2UWP toolkit</title>
 <meta property="og:title" content="The PWA2UWP toolkit"/>
 <meta property="og:description" name="description"
-      content="Online tools helping to make a web application available on Windows 10."/>
+      content="Online tools helping to make a web application available on Windows 10."/>
 <meta property="og:type" content="website"/>
 <meta property="schema:keywords dc:subject" name="keywords"
-      content="progressive web application,universal Windows platform"/>
+      content="progressive web application,universal Windows platform,Microsoft Store"/>
 
 <meta property="schema:accessibilityHazard" content="none"/>
 <meta property="schema:accessibilityFeature" content="highContrastDisplay"/>
@@ -21,6 +21,7 @@
 
 <meta property="og:image" content="apple-touch-icon.png"/>
 <meta property="og:url" content="/"/>
+
 <link rel="canonical" href="/"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <link rel="icon" href="favicon.ico"/>
@@ -123,33 +124,37 @@
       <li><a href="appx-manifest.html">Appx manifest generator</a></li>
     </ul>
     <p>
-      Set both in <a href="package.html"><strong>your package</strong></a>
-      and you can submit a web app to the Microsoft Store 😉
+      Set both icons &amp; a manifest in
+      <a href="package.html"><strong>your package</strong></a>,
+      then submit it to the Microsoft Store.
     </p>
   </nav>
 
   <section aria-labelledby="about">
     <h2 id="about">About</h2>
     <p property="schema:description dc:description">
-      This site consists of online tools that are useful when publishing a
+      This site is useful when publishing a
       <a href="https://developer.mozilla.org/Apps/Progressive" rel="external">
-        Progressive Web App (<abbr>PWA</abbr>)</a> to Windows 10 customers.
+        Progressive Web App (<abbr>PWA</abbr>)</a> to the Microsoft Store.
+      Applications available on the Store are
+      “<a href="https://en.wikipedia.org/wiki/Universal_Windows_Platform"
+          rel="external">Universal Windows Platform (<abbr>UWP</abbr>)</a> apps”.
     </p>
     <p>
-      Applications available on the Microsoft Store are
-      “<a href="https://docs.microsoft.com/windows/uwp/" rel="external">Universal
-        Windows Platform (<abbr>UWP</abbr>)</a> apps”,
-      because they can run on any Windows device
-      (<abbr>PCs</abbr>, tablets, Xbox, <abbr>etc.</abbr>)
+      With this site, you can transform your <abbr>PWA</abbr> metadata
+      to the <abbr>UWP</abbr> format spoken by the Store.
+      A recent browser suffices for the job.
+      You won’t need Visual Studio, or even Windows 10 😉
     </p>
     <p>
-      A big benefit of publishing your web app to the Microsoft Store is that,
-      once installed, it’ll have <strong>access to all
+     A (web) app installed via the Microsoft Store has
+      <strong>
+        access to all the
         <a href="https://docs.microsoft.com/microsoft-edge/windows-runtime" rel="external">
           <abbr title="Windows RunTime">WinRT</abbr></a>
-        <abbr title="Application Programming Interfaces">APIs</abbr></strong>,
-      like a native application. It will not be just a glorified bookmark,
-      like it is on other platforms — Google may
+        <abbr title="Application Programming Interfaces">APIs</abbr></strong>.
+      It’s not just a glorified bookmark,
+      like on other platforms – Google may
       <a href="https://developers.google.com/web/progressive-web-apps/"
          rel="external nofollow">advertize this as “progress(ive)”</a>,
       the fact is that Apple made it
@@ -161,11 +166,6 @@
   <nav aria-labelledby="externs">
     <h2 id="externs">External links</h2>
     <ul>
-      <li>
-        <a href="https://www.pwabuilder.com" rel="external">
-          <abbr>PWA</abbr>Builder.com, an alternative to this site
-        </a>
-      </li>
       <li>
         <a href="https://www.microsoft.com/store"
            rel="external">The Microsoft Store</a> -
@@ -179,29 +179,17 @@
            rel="external"><abbr title="Internet Explorer">IE</abbr>/Edge virtual machines</a>
       </li>
       <li>
-        <a href="https://developer.mozilla.org/Apps/Progressive" rel="external">
-          “Progressive Web Apps” on <abbr title="Mozilla Developer Network">MDN</abbr>
-        </a>
+        <a href="https://docs.microsoft.com/windows/uwp/"
+           rel="external">Universal Windows Platform official documentation</a>
       </li>
       <li>
         <a href="https://docs.microsoft.com/microsoft-edge/progressive-web-apps"
            rel="external">“Progressive Web Apps” on Microsoft Edge doc center</a>
       </li>
       <li>
-        <a href="https://en.wikipedia.org/wiki/Progressive_Web_Apps"
-           rel="external">“Progressive Web Apps” on Wikipedia</a>
-      </li>
-      <li>
-        <a href="https://docs.microsoft.com/windows/uwp/"
-           rel="external">Universal Windows Platform official documentation</a>
-      </li>
-      <li>
-        <a href="https://en.wikipedia.org/wiki/Universal_Windows_Platform"
-           rel="external">“Universal Windows Platform” on Wikipedia</a>
-      </li>
-      <li>
-        <a href="https://en.wikipedia.org/wiki/Universal_Windows_Platform_apps"
-           rel="external">“Universal Windows Platform <em>apps</em>” on Wikipedia</a>
+        <a href="https://www.pwabuilder.com" rel="external">
+          <abbr>PWA</abbr>Builder.com, an alternative to this site
+        </a>
       </li>
     </ul>
   </nav>
