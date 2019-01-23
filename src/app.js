@@ -112,7 +112,7 @@ export const database = new Promise(function(resolve, reject) {
 
     // N.B.: iOS 9.3 needs one distinct transaction per store
     db.transaction("icons").objectStore("icons").count().onsuccess = function() {
-      setIconsStatus(this.result === 15, false);
+      setIconsStatus(this.result >= 6, false);
     };
     db.transaction("manifest").objectStore("manifest").count().onsuccess = function() {
       setManifestStatus(this.result === 1, false);

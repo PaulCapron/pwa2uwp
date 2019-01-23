@@ -77,26 +77,6 @@
     background-size: 20px 20px;
     -ms-high-contrast-adjust: none;
   }
-  #Square44x44Logo canvas {
-    height: 44px;
-    width: 44px;
-  }
-  #Square71x71Logo canvas {
-    height: 71px;
-    width: 71px;
-  }
-  #Square150x150Logo canvas {
-    height: 150px;
-    width: 150px;
-  }
-  #Square310x310Logo canvas {
-    height: 310px;
-    width: 310px;
-  }
-  #Wide310x150Logo canvas {
-    height: 150px;
-    width: 310px;
-  }
 
   #save line {
     stroke-dasharray: 9 1.5;
@@ -143,7 +123,7 @@
     <p>
       This tool can help you create the
       <a href="https://docs.microsoft.com/windows/uwp/design/shell/tiles-and-notifications/app-assets"
-         rel="external">tile icons needed for a Windows 10 program</a>.
+         rel="external">tile icons needed for a Windows 10 program</a>.
     </p>
     <p>
       It will work well if you can provide a source image that:
@@ -207,7 +187,9 @@
 
       <figure id="Square71x71Logo" aria-labelledby="Square71x71Logo-h">
         <div>
-          <canvas role="img" data-width="71" data-height="71"
+          <canvas role="img"
+                  style="width: 71px; height: 71px"
+                  data-width="71" data-height="71"
                   data-inner-width-fraction=".50" data-inner-height-fraction=".50">
             Preview of the 71×71 tile.
           </canvas>
@@ -222,7 +204,9 @@
 
       <figure id="Square150x150Logo" aria-labelledby="Square150x150Logo-h">
         <div>
-          <canvas role="img" data-width="150" data-height="150"
+          <canvas role="img"
+                  style="width: 150px; height: 150px"
+                  data-width="150" data-height="150"
                   data-inner-width-fraction=".33" data-inner-height-fraction=".33">
             Preview of the 150×150 tile.
           </canvas>
@@ -237,7 +221,9 @@
 
       <figure id="Square310x310Logo" aria-labelledby="Square310x310Logo-h">
         <div>
-          <canvas role="img" data-width="310" data-height="310"
+          <canvas role="img"
+                  style="width: 310px; height: 310px"
+                  data-width="310" data-height="310"
                   data-inner-width-fraction=".33" data-inner-height-fraction=".33">
             Preview of the 310×310 tile.
           </canvas>
@@ -252,7 +238,9 @@
 
       <figure id="Wide310x150Logo" aria-labelledby="Wide310x150Logo-h">
         <div>
-          <canvas role="img" data-width="310" data-height="150"
+          <canvas role="img"
+                  style="width: 310px; height: 150px"
+                  data-width="310" data-height="150"
                   data-inner-width-fraction=".16" data-inner-height-fraction=".33">
             Preview of the 310×150 tile.
           </canvas>
@@ -262,6 +250,23 @@
           <a download="Wide310x150Logo.scale-100.png">Scale 1×</a>
           <a download="Wide310x150Logo.scale-200.png">Scale 2×</a>
           <a download="Wide310x150Logo.scale-400.png">Scale 4×</a>
+        </figcaption>
+      </figure>
+
+      <figure id="StoreLogo" aria-labelledby="StoreLogo-h">
+        <div>
+          <canvas role="img"
+                  style="width: 50px; height: 50px"
+                  data-width="50" data-height="50"
+                  data-inner-width-fraction=".75" data-inner-height-fraction=".75">
+            Preview of the store icon.
+          </canvas>
+        </div>
+        <figcaption>
+          <h2 id="StoreLogo-h">StoreLogo</h2>
+          <a download="StoreLogo.scale-100.png">Scale 1×</a>
+          <a download="StoreLogo.scale-200.png">Scale 2×</a>
+          <a download="StoreLogo.scale-400.png">Scale 4×</a>
         </figcaption>
       </figure>
 

@@ -98,7 +98,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
         .insertRule(`img{background:${bgColor}}`, 0);
     }
 
-    if (zipEntries.length !== 15) return; // (some) icons are missing
+    if (zipEntries.length < 6) return; // some icons are missing
     zipEntries.push(new ZipEntry(folderName + "appxmanifest.xml", toUTF8Buffer(manif)));
   }
 
