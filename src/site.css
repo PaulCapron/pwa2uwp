@@ -26,7 +26,7 @@ html {
     --link-color: #00e;
     --visited-color: #a00075;
     --anim-focusvisible: outline .25s;
-    --filter-hoverfocus: brightness(125%);
+    --filter-hoverfocus: brightness(120%);
     --filter-active: saturate(50%);
 }
 @keyframes outline { /* inspired by https://github.com/NV/flying-focus */

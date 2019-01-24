@@ -10,7 +10,8 @@ dst: dst/index.html \
 	dst/robots.txt \
 	dst/sitemap.txt \
 	dst/favicon.ico \
-	dst/apple-touch-icon.png
+	dst/apple-touch-icon.png \
+	dst/msft-partner-pkg.png
 
 dst/%: src/%; cp $< $@
 

@@ -75,7 +75,7 @@
       linear-gradient(-45deg, transparent 75%, #ccc 75%);
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     background-size: 20px 20px;
-    border: .0625em solid var(--fg-grey);
+    border: .03125em solid var(--fg-grey);
     vertical-align: top;
     -ms-high-contrast-adjust: none;
   }
@@ -93,17 +93,24 @@
   kbd {
     display: block;
     font-weight: bolder;
-    margin: .75em 1vw;
+    margin: .75em;
     overflow-x: auto;
-  }
-
-  h2 + p {
-    margin-bottom: 1.5em;
-    text-align: center;
   }
   section > small {
     display: block;
-    margin: .75em .25rem;
+    margin: .5rem .25rem 1rem;
+  }
+
+  ol > li {
+    margin-bottom: 1em;
+  }
+  li img {  /* screenshot */
+    background: none;
+    max-width: 99%;
+    object-fit: contain;
+  }
+  section li > a:last-child {  /* screenshot link */
+    display: inline-block;
   }
 
   @media (max-width: 50em) {
@@ -112,14 +119,6 @@
     }
     div > section {
       width: 100%;
-    }
-    h2 { /* visually hidden */
-      height: 1px;
-      margin: 0;
-      opacity: 0;
-      padding: 0;
-      white-space: nowrap;
-      width: 1px;
     }
   }
 </style>
@@ -195,46 +194,69 @@
     <section aria-labelledby="next-h">
       <h2>What’s next</h2>
 
-      <p>
-        <a hidden="hidden" download="uwp-pkg.zip"></a>
-        <button type="button" disabled="disabled">
-          <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-            <line x1="4" x2="20" y1="23" y2="23"/>
-            <g>
-              <line x1="12" x2="12" y1="1" y2="19"/>
-              <polyline points="4.22,11.2 12,19 19.8,11.2"/>
+      <ol>
+        <li>
+          <a hidden="hidden" download="uwp-pkg.zip"></a>
+          <button type="button" disabled="disabled">
+            <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+              <line x1="4" x2="20" y1="23" y2="23"/>
+              <g>
+                <line x1="12" x2="12" y1="1" y2="19"/>
+                <polyline points="4.22,11.2 12,19 19.8,11.2"/>
             </g>
-          </svg>Download your package as a Zip
-        </button>
-      </p>
+            </svg>Download your package as a Zip
+          </button>
+        </li>
 
-      <p>
-        You will
-        <strong>need to convert the package zip to an <code>.appx</code> file</strong>
-        to submit it to the Microsoft Store.
-      </p>
-      <p>
-        Call the
-        <a href="https://github.com/MicrosoftEdge/CloudAppX" rel="external">
-          CloudAppX web service</a> for this.
-        For instance, using <a href="https://en.wikipedia.org/wiki/CURL" rel="external">
-          <code>curl</code></a>:
-        <kbd>curl -o <var>name</var>.appx -F "xml=@uwp-pkg.zip" https://cloudappx.azurewebsites.net/v3/build</kbd>
-      <small>
-        This results in a file named <code><var>name</var>.appx</code>,
-        downloaded in the current directory. Use any <var>name</var> you want.
-        <br/>
-        The input zip must be named <code>uwp-pkg.zip</code>.
-      </small>
-      </p>
+        <li>
+          <strong>Convert the package zip to an <code>.appx</code> file</strong>,
+          the format understood by Windows.
+          <p>
+            Call the
+            <a href="https://GitHub.com/MicrosoftEdge/CloudAppX" rel="external">
+              CloudAppX web service</a> for this.
+            For instance, using
+            <a href="https://en.wikipedia.org/wiki/CURL" rel="external">
+              <code>curl</code></a>:
+            <kbd>curl -o <var>name</var>.appx -F "xml=@uwp-pkg.zip"
+              https://CloudAppX.AzureWebsites.net/v3/build</kbd>
+          </p>
+          <details>
+            <small>
+              This results in a file named <code><var>name</var>.appx</code>,
+              downloaded in the current directory. Use any <var>name</var> you want.
+              <br/>
+              The input zip must be named <code>uwp-pkg.zip</code>.
+            </small>
+            <p>
+              <small>
+                You can also do the conversion offline,
+                <a href="https://docs.microsoft.com/windows/uwp/packaging/manual-packaging-root"
+                   rel="external">
+                  using the <code>MakeAppx.exe</code> &amp; <code>SignTool.exe</code> utilities</a>
+                that are included in the Windows 10
+                <abbr title="Software Development Kit">SDK</abbr>.
+              </small>
+            </p>
+          </details>
+        </li>
 
-      <p>
-        You can also do the conversion offline,
-        <a href="https://docs.microsoft.com/windows/uwp/packaging/manual-packaging-root"
-           rel="external">
-          using the <code>MakeAppx.exe</code> &amp; <code>SignTool.exe</code> utilities</a>
-        that are included in the Windows 10 <abbr title="Software Development Kit">SDK</abbr>.
-      </p>
+        <li>
+          <strong>Upload the package appx to the
+            <a href="https://partner.microsoft.com/dashboard" rel="external">
+              Microsoft Partner Center</a></strong>
+          <a href="msft-partner-pkg.png">
+            <img src="msft-partner-pkg.png" width="350" height="204"
+                 alt="“Packages” section in the Partner Center"/>
+          </a>
+        </li>
+
+        <li>
+          <strong>Finish</strong> filling everything in the Partner Center,
+          then submit your app.<br/>
+          After certification, it will be published to the Microsoft Store 😎
+        </li>
+      </ol>
     </section>
   </div>
 </main>
