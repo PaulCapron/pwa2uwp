@@ -5,11 +5,11 @@ as an Universal Windows Platform (UWP) application.
 
 ## Usage
 
-Simply open `src/index.html` in Firefox (or Edge?) for local use.
+Simply open `src/index.html` in Firefox for local use.
 
-Blink & WebKit browsers need an HTTP server due to (over)restrictions 
+Blink & WebKit browsers need an HTTP server, due to (over)restrictions
 regarding `file:` origins.  
-`cd src && python3 -m http.server` is an idea.
+Running `cd src && python3 -m http.server` is an idea.
 
 Old browsers, including Internet Explorer 11, only (partially) work
 using the build, fit-for-distribution, website.
@@ -25,27 +25,29 @@ The build process requires an UNIX-like system, with
 installed.
 
 Some third-party open-source JARs are also needed.
-They can be **automatically downloaded** by running **`make deps`**.  
-These third-party “development” dependencies are:
+They are **automatically downloaded**, on first need, by `make`.  
+(The `HTTPGET` environment variable defines the download command to execute.
+It’s `curl` by default. `wget -O -` works too.)
+These “development dependencies” are:
 
-  * [**Saxon-HE 9.8**](http://saxon.sourceforge.net/#F9.8HE),
+  * [**Saxon-HE 9.≥8**](http://saxon.sourceforge.net/#F9.9HE),
   a XSLT 2 processor, to embed CSS/JS code directly into the HTML & more.  
-  Put in the `aux/` folder, named `saxon9he.jar`.  
-  On Ubuntu ≥18.04, you can `apt install` the `libsaxonhe-java` package,
+  Put in the `aux/` folder, named `saxon9he.jar`.
+  On Ubuntu ≥ 18.04, you can `apt install` the `libsaxonhe-java` package,
   then symlink `/usr/share/java/Saxon-HE.jar` to `aux/saxon9he.jar`.
 
   * The [**Closure Compiler**](https://github.com/google/closure-compiler),
   to transpile and minify JavaScript code.  
-  Put in `aux/`, named `closure-compiler*.jar`.  
+  Put in `aux/`, named `closure-compiler.jar`.
   (⚠ The version available in Ubuntu package repositories is too old to work.)
 
   * The [**YUICompressor**](https://github.com/yui/yuicompressor), to minify
-  CSS code.
-  Put in `aux/`, named `yuicompressor*.jar`.
+  CSS code. `htmlcompressor.jar` delegates that job to it.  
+  Put in `aux/`, named `yuicompressor.jar`.
 
   * [**`htmlcompressor.jar`**](https://code.google.com/archive/p/htmlcompressor/),
   to minify HTML & XML code.
-  Put in `aux/`, named `htmlcompressor*.jar`.
+  Put in `aux/`, named `htmlcompressor.jar`.
 
 ## Hierarchy
 
@@ -66,6 +68,6 @@ These third-party “development” dependencies are:
   Everything is [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 
   * `netlify.toml`: configuration for hosting on [Netlify](https://www.netlify.com).
-  Deploys are done manually.
+  The Netlify↔GitHub integration is not used; deploys are manual.
 
   * `README.md`: this file.
