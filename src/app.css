@@ -318,15 +318,12 @@ noscript {
 }
 noscript {
     background: #fee;
-    border-top: dashed;
+    border-top: solid;
     bottom: 0;
-    font-size: larger;
-    font-weight: bolder;
     left: 0;
     position: fixed;
-    padding: 3vh .65rem;
+    padding: 5vmin;
     right: 0;
-    text-align: center;
 }
 
 /*******************************************************************************

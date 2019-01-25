@@ -79,6 +79,7 @@ const saveBtn = document.getElementById("save");
 const downloadAllLink = saveBtn.nextElementSibling;
 const outputElt = document.querySelector("output");
 const extraOptionsElt = document.querySelector("form>div");
+const sourceFileElt = document.querySelector("input[type='file']");
 const silhouetteElt = extraOptionsElt.querySelector("input[type='checkbox']");
 {
   const canvasColorElt = extraOptionsElt.querySelector("input[type='color']");
@@ -123,7 +124,9 @@ function zipAllIcons() {
 }
 
 
-document.querySelector("input[type='file']").onchange = function() {
+sourceFileElt.disabled = false; // JS is enabled
+
+sourceFileElt.onchange = function() {
   if (this.files.length === 0) return;
 
   if (this.files[0].size <= 5e6 || confirm(
