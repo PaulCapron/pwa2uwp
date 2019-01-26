@@ -3,6 +3,7 @@
  * @see appx-manifest.html The document this file scripts and depends on.
  * @see https://docs.microsoft.com/uwp/schemas/appxpackage/appx-package-manifest
  * @author Paul <paul@fragara.com>
+ * @since 2018
  * @license CC0-1.0
  *  The author has dedicated all rights to this software to the public domain.
  *  This software is distributed without any warranty.
