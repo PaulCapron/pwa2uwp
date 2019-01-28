@@ -9,7 +9,7 @@
  *  This software is distributed without any warranty.
  */
 
-import { database, saveManifest } from "./app.js";
+import { savedManifest, saveManifest } from "./app.js";
 
 
 /** The “mother” of all manifest documents.
@@ -157,34 +157,104 @@ function generateManifest(data) {
   return (new XMLSerializer).serializeToString(manif) + "\n";
 }
 
+/** @return {!Object<string,(string|boolean|number)>} Extracted data from the manifest.
+ *  The keys are the same than the DOM <input> ids.
+ * @param {!Document} manifest  The manifest to read.
+ *
+ * This function is basically the inverse of generateManifest().
+ */
+function toDict(manifest) {
+  const identityElt = manifest.querySelector("Identity");
+  const visualElt = manifest.querySelector("VisualElements");
+  const defaultTileElt = visualElt.querySelector("DefaultTile");
+  const versionNumbers = identityElt.getAttribute("Version").split(".");
+
+  return {
+    majorVersion: Number(versionNumbers[0]),
+    minorVersion: Number(versionNumbers[1]),
+    buildVersion: Number(versionNumbers[2]),
+    revisionVersion: Number(versionNumbers[3]),
+
+    reservedName: manifest.querySelector("DisplayName").textContent,
+    storeLogo: manifest.querySelector("Logo").textContent,
+    publisherDisplayName: manifest.querySelector("PublisherDisplayName").textContent,
+    url: manifest.querySelector("Application").getAttribute("StartPage"),
+    lang: manifest.querySelector("Resource").getAttribute("Language"),
+
+    publisher: identityElt.getAttribute("Publisher"),
+    pkgIdentityName: identityElt.getAttribute("Name"),
+
+    displayName: visualElt.getAttribute("DisplayName"),
+    description: visualElt.getAttribute("Description"),
+    bgColor: visualElt.getAttribute("BackgroundColor"),
+    square44x44Logo: visualElt.getAttribute("Square44x44Logo"),
+    square150x150Logo: visualElt.getAttribute("Square150x150Logo"),
+
+    landscapeOrientation: (visualElt.querySelector("Rotation[Preference='landscape']") !== null),
+    portraitOrientation: (visualElt.querySelector("Rotation[Preference='portrait']") !== null),
+    landscapeFlippedOrientation:
+      (visualElt.querySelector("Rotation[Preference='landscapeFlipped']") !== null),
+    portraitFlippedOrientation:
+      (visualElt.querySelector("Rotation[Preference='portraitFlipped']") !== null),
+
+    square71x71Logo: defaultTileElt && defaultTileElt.getAttribute("Square71x71Logo") || "",
+    square310x310Logo: defaultTileElt && defaultTileElt.getAttribute("Square310x310Logo") || "",
+    wide310x150Logo: defaultTileElt && defaultTileElt.getAttribute("Wide310x150Logo") || "",
+  }
+}
+
 
 let /** string */ manifest;
 const formElt = document.forms[0];
-const inputElts = formElt.querySelectorAll("input");
+const inputElts = formElt.querySelectorAll("input[id]");
+const useSameIconPathsElt = formElt.querySelector("input:not([id])");
+const iconPathsElts = formElt.querySelectorAll("input[id$='Logo']");
 const outputElt = formElt.querySelector("output");
 const saveBtn = outputElt.nextElementSibling;
 const downloadLink = saveBtn.nextElementSibling;
 const downloadBtn = downloadLink.nextElementSibling;
 
-formElt.querySelector("button[type='submit']").disabled = false;
+formElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
 
-document.getElementById("useOwnIconPaths").onchange = function() {
-  for (
-    let inputElt, labelElt = this.parentNode.nextElementSibling;
-    labelElt !== null && (inputElt = labelElt.firstElementChild);
-    labelElt = labelElt.nextElementSibling
-  ) {
+savedManifest.then(function(savedManif) {
+  saveBtn.disabled = false;
+  saveBtn.onclick = function() { saveManifest(manifest); };
+
+  reflect_in_dom: {
+    if (savedManif === undefined) return;
+    if (formElt.contains(document.activeElement)) return; // don’t mess with an interacting user
+
+    const data = toDict((new DOMParser).parseFromString(savedManif, "text/xml"));
+
+    for (const key in data) {
+      const val = data[key];
+      const prop = (typeof val === "boolean") ? "checked" : "value";
+
+      document.getElementById(key)[prop] = val;
+    }
+    for (let i = 0; i < iconPathsElts.length; i++) {
+      const pathElt = iconPathsElts[i];
+
+      if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
+        useSameIconPathsElt.checked = false;
+        useSameIconPathsElt.onchange(); // will make pathElt & its siblings read-write
+        break;
+      }
+    }
+    formElt.firstElementChild.hidden = false; // display the “pre-filled” notice with reset button
+  }
+});
+
+useSameIconPathsElt.onchange = function() {
+  for (let i = 0; i < iconPathsElts.length; i++) {
+    const inputElt = iconPathsElts[i];
+
     inputElt.readOnly = this.checked;
     if (this.checked) {
-      inputElt.value = inputElt.getAttribute("value"); // reset to initial
+      inputElt.value = inputElt.getAttribute("value"); // reset to initial/default
     }
   }
 };
-
-database.then(function() {
-  saveBtn.disabled = false;
-  saveBtn.onclick = function() { saveManifest(manifest); };
-});
 
 // An <a href="blob:…"> is non-sense (rightclick → “copy link URL”, get screwed
 // because a Blob is short-lived).

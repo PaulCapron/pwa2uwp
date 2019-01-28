@@ -24,6 +24,11 @@
     margin: .25em auto;
     text-align: center;
   }
+  button[type="reset"] {
+    background: #930;
+    font-size: inherit;
+    margin: 0;
+  }
 
   h1 {
     text-align: center;
@@ -39,7 +44,11 @@
   form ul {
     margin: .25em 0;
   }
-
+  form > p:first-child { /* pre-filled notice with reset button */
+    margin: 0 0 .5em;
+    max-width: 100%;
+    text-align: center;
+  }
   form small {
     margin-bottom: .1rem;
   }
@@ -118,6 +127,9 @@
     margin-top: .6em;
   }
 
+  button[type="reset"] > svg {
+    transform: rotate(45deg);
+  }
   button[type=submit] line {
     stroke-dasharray: 0 10;
     transition: stroke-dasharray .1s;
@@ -129,12 +141,15 @@
   button[type=submit]:focus line {
     stroke-dasharray: 10 10;
   }
-  #save line {
+  #save line,
+  button[type=reset] line {
     stroke-dasharray: 9 1.5;
     transition: stroke-dasharray .2s;
   }
   #save:enabled:hover line,
-  #save:focus line {
+  #save:focus line,
+  button[type=reset]:hover line,
+  button[type=reset]:focus line {
     stroke-dasharray: 10.5 1.5;
   }
 </style>
@@ -171,6 +186,19 @@
   </h1>
 
   <form action="#">
+    <p hidden="hidden">
+      The form was filled with your saved data.
+      If you instead want to start anew,
+      <button type="reset">
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+          <line x1="12" y1="13" x2="1.5" y2="13"/>
+          <line x1="12" y1="13" x2="22.5" y2="13"/>
+          <line x1="12" y1="13" x2="12" y2="2.5"/>
+          <line x1="12" y1="13" x2="12" y2="23.5"/>
+        </svg>Reset the form
+      </button>
+    </p>
+
     <div>
       <section id="generalities" aria-labelledby="generalities-h">
         <h2 id="generalities-h">Generalities</h2>
@@ -321,8 +349,7 @@
 
         <div class="field">
           <label>
-            <input type="checkbox" id="useOwnIconPaths" checked="checked"
-                   /><span aria-hidden="true"></span>
+            <input type="checkbox" checked="checked"/><span aria-hidden="true"></span>
             Use same icon paths than the tile icons generator
           </label>
 
