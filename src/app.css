@@ -4,6 +4,11 @@
  * @license CC0-1.0
  *******************************************************************************/
 
+html {
+    /* Used for dangerous or erroneous elements. */
+    --danger-color: #910;
+}
+
 /*******************************************************************************
  * Top navigation bar.
  */
@@ -91,7 +96,7 @@ a.pkg > span {
     color: #050;
 }
 .miss {
-    color: #900;
+    color: var(--danger-color);
 }
 /*dd*/.anim {
     animation: tada .7s .07s;
@@ -314,7 +319,7 @@ input:read-only {
 }
 input:invalid,
 noscript {
-   color: #a30;
+   color: var(--danger-color);
 }
 noscript {
     background: #fee;
