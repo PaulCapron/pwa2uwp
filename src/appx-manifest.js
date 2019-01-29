@@ -29,7 +29,13 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
   <Applications>
     <Application Id="WebApp">
       <uap:VisualElements>
-        <uap:DefaultTile/>
+        <uap:DefaultTile>
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/>
           <uap:Rotation Preference="portrait"/>
@@ -74,6 +80,9 @@ function generateManifest(data) {
   const ruleElt = uriRulesElt.querySelector("Rule");
   const visualElt = appElt.querySelector("VisualElements");
   const defaultTileElt = visualElt.querySelector("DefaultTile");
+  const showNameOnTilesElt = defaultTileElt.querySelector("ShowNameOnTiles");
+  const showOn310x310Elt = showNameOnTilesElt.querySelector("ShowOn[Tile='square310x310Logo']");
+  const showOn310x150Elt = showOn310x310Elt.nextElementSibling;
   const rotPrefElt = visualElt.querySelector("InitialRotationPreference");
   const landscapeRotElt = rotPrefElt.firstElementChild;
   const portraitRotElt = landscapeRotElt.nextElementSibling;
@@ -129,21 +138,37 @@ function generateManifest(data) {
     }
   }
   iconography: {
-    const { storeLogo, square44x44Logo, square150x150Logo, bgColor } = data;
+    const { storeLogo, square44x44Logo, square150x150Logo } = data;
     const { square71x71Logo, square310x310Logo, wide310x150Logo } = data;
+    const { shortName, bgColor } = data;
 
     logoElt.textContent = storeLogo;
     visualElt.setAttribute("BackgroundColor", bgColor);
     visualElt.setAttribute("Square44x44Logo", square44x44Logo);
     visualElt.setAttribute("Square150x150Logo", square150x150Logo);
 
-    if (!square71x71Logo && !square310x310Logo && !wide310x150Logo) {
+    if (!square71x71Logo && !square310x310Logo && !wide310x150Logo && !shortName) {
       visualElt.removeChild(defaultTileElt.previousSibling); // whitespace text node
       visualElt.removeChild(defaultTileElt);
     } else {
       if (square71x71Logo) defaultTileElt.setAttribute("Square71x71Logo", square71x71Logo);
       if (square310x310Logo) defaultTileElt.setAttribute("Square310x310Logo", square310x310Logo);
       if (wide310x150Logo) defaultTileElt.setAttribute("Wide310x150Logo", wide310x150Logo);
+
+      if (shortName) {
+        defaultTileElt.setAttribute("ShortName", shortName);
+        if (!square310x310Logo) {
+          showNameOnTilesElt.removeChild(showOn310x310Elt.previousSibling); // whitespace text node
+          showNameOnTilesElt.removeChild(showOn310x310Elt);
+        }
+        if (!wide310x150Logo) {
+          showNameOnTilesElt.removeChild(showOn310x150Elt.previousSibling); // whitespace text node
+          showNameOnTilesElt.removeChild(showOn310x150Elt);
+        }
+      } else {
+        defaultTileElt.removeChild(showNameOnTilesElt.previousSibling); // whitespace text node
+        defaultTileElt.removeChild(showNameOnTilesElt);
+      }
     }
   }
   microsoft_store_ids: {
@@ -200,6 +225,7 @@ function toDict(manifest) {
     square71x71Logo: defaultTileElt && defaultTileElt.getAttribute("Square71x71Logo") || "",
     square310x310Logo: defaultTileElt && defaultTileElt.getAttribute("Square310x310Logo") || "",
     wide310x150Logo: defaultTileElt && defaultTileElt.getAttribute("Wide310x150Logo") || "",
+    shortName: defaultTileElt && defaultTileElt.getAttribute("ShortName") || "",
   }
 }
 
