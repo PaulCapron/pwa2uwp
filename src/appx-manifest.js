@@ -229,47 +229,176 @@ function toDict(manifest) {
   }
 }
 
+/** @return {!Object<string,(string|boolean|number)>} Converted manifest data.
+ *  The keys are the same than the DOM <input> ids.
+ * @param {!Object<string,(string,!Array,!Object)>} webAppManif  The W3C Web App Manifest data.
+ *
+ * It does not matter (much) if the resulting appx manifest data is actually invalid:
+ * if the user then tries to submit the form, the built-in form validation will fail
+ * and the browser will highlight/focus the invalid fields 😉
+ * The data will probably be invalid, actually. For instance, a relative “start_url”
+ * is allowed (and common, I guess) in a Web App Manifest, but it has to be absolute
+ * in an Appx Manifest.
+ */
+function webAppManifestDictToAppxManifestDict(webAppManif) {
+  let bgColor;
+  {
+    // A color in a W3C App Manifest can be given in any of the valid CSS3 color formats.
+    // So things like “#rgb”, “hsl(…)”, “rgba(…)” (and also, in theory, ‘currentColor’
+    // or the “system colors” like ‘HighlightText’ or ‘ButtonShadow’!) are all valid.
+    // See https://www.w3.org/TR/appmanifest/#theme_color-member
+    //
+    // That’s not the case in an MSFT Appx Manifest, where a color has to be “#rrggbb”
+    // or one of the “named colors” (the same than the CSS3 named colors, although I
+    // don’t know if an appx manifest is case-sensitive on that matter.)
+    // See https://docs.microsoft.com/uwp/schemas/appxpackage/uapmanifestschema/element-uap-visualelements
+    //
+    // And anyway, an <input type=color> only allows the “#rrggbb” format.
+    //
+    // So, we have to normalize the color to be in “#rrggbb” format.
+    // Doing so manually would be a very daunting, very hazardous task.
+    // But here is the trick: we can delegate that job to the browser!
+    // See https://www.w3.org/TR/2dcontext/#serialization-of-a-color
+    const canvasCtx = document.createElement("canvas").getContext("2d");
+
+    canvasCtx.fillStyle = webAppManif.theme_color; // (intentionally not background_color)
+    bgColor = canvasCtx.fillStyle; // serialization ⇒ normalization happens here!
+
+    // If the color was not fully opaque, bgColor ends up being of the form “rgba(…)”.
+    // This is an invalid value for an <input type=color>, so form validation will fail.
+    // That’s OK: an appx manifest does not allow a non-opaque color either, unless it’s
+    // ‘transparent’. But ‘transparent’ is invalid for an <input type=color>, so for
+    // the time being, we also implicitely reject it 🙄…
+    // It’s dubious to me if ‘transparent’ really makes sense in a manifest anyway.
+  }
+
+  let landscapeOrientation = false, portraitOrientation = false;
+  let landscapeFlippedOrientation = false, portraitFlippedOrientation = false;
+
+  // See https://www.w3.org/TR/appmanifest/#orientation-member
+  // and https://www.w3.org/TR/screen-orientation/
+  switch (webAppManif.orientation) {
+  case "any": landscapeFlippedOrientation = portraitFlippedOrientation = true; // fallthrough!
+  case "natural": landscapeOrientation = portraitOrientation = true; break;
+
+  case "landscape": landscapeFlippedOrientation = true; // fallthrough!
+  case "landscape-primary": landscapeOrientation = true; break;
+  case "landscape-secondary": landscapeFlippedOrientation = true; break;
+
+  case "portrait": portraitFlippedOrientation = true; // fallthrough!
+  case "portrait-primary": portraitOrientation = true; break;
+  case "portrait-secondary": portraitFlippedOrientation = true; break;
+  }
+  // If ‘orientation’ was not set in the Web App Manifest, no worry. As said on the page:
+  // “Selecting none of them is equivalent to selecting all of them.” 😉
+
+  return {
+    bgColor,
+
+    landscapeOrientation, portraitOrientation,
+    landscapeFlippedOrientation, portraitFlippedOrientation,
+
+    displayName: webAppManif.name || "",
+    shortName: webAppManif.short_name || "",
+    description: webAppManif.description || "",
+    lang: webAppManif.lang || "",
+    url: webAppManif.start_url || "",
+  };
+}
+
 
 let /** string */ manifest;
-const formElt = document.forms[0];
-const inputElts = formElt.querySelectorAll("input[id]");
-const useSameIconPathsElt = formElt.querySelector("input:not([id])");
-const iconPathsElts = formElt.querySelectorAll("input[id$='Logo']");
-const outputElt = formElt.querySelector("output");
+const webAppManifForm = document.forms[0];
+const mainFormElt = document.forms[1];
+const webAppManifCancelBtn = webAppManifForm.querySelector("button[type='button']");
+const prefillUsingWebAppManifBtn = mainFormElt.querySelector("button[type='button']");
+const inputElts = mainFormElt.querySelectorAll("input[id]");
+const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
+const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
+const outputElt = mainFormElt.querySelector("output");
 const saveBtn = outputElt.nextElementSibling;
 const downloadLink = saveBtn.nextElementSibling;
 const downloadBtn = downloadLink.nextElementSibling;
 
-formElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
 
-savedManifest.then(function(savedManif) {
+prefillUsingWebAppManifBtn.disabled =
+  mainFormElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
+
+/** @param {!Object<string,(string|boolean|number)>} appxManif  The manifest to fill the DOM with.
+ *  The keys are expected to be the same than the DOM <input> ids.
+ */
+function fillDomWithAppxManifestDict(appxManif) {
+  for (const key in appxManif) {
+    const val = appxManif[key];
+    const prop = (typeof val === "boolean") ? "checked" : "value";
+
+    document.getElementById(key)[prop] = val;
+  }
+  for (let i = 0; i < iconPathsElts.length; i++) {
+    const pathElt = iconPathsElts[i];
+
+    if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
+      useSameIconPathsElt.checked = false;
+      useSameIconPathsElt.onchange(); // will make pathElt & its siblings read-write
+      break;
+    }
+  }
+}
+
+savedManifest.then(function indexedDBIsSupported() {
   saveBtn.disabled = false;
   saveBtn.onclick = function() { saveManifest(manifest); };
-
-  reflect_in_dom: {
-    if (savedManif === undefined) return;
-    if (formElt.contains(document.activeElement)) return; // don’t mess with an interacting user
-
-    const data = toDict((new DOMParser).parseFromString(savedManif, "text/xml"));
-
-    for (const key in data) {
-      const val = data[key];
-      const prop = (typeof val === "boolean") ? "checked" : "value";
-
-      document.getElementById(key)[prop] = val;
-    }
-    for (let i = 0; i < iconPathsElts.length; i++) {
-      const pathElt = iconPathsElts[i];
-
-      if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
-        useSameIconPathsElt.checked = false;
-        useSameIconPathsElt.onchange(); // will make pathElt & its siblings read-write
-        break;
-      }
-    }
-    formElt.firstElementChild.hidden = false; // display the “pre-filled” notice with reset button
-  }
 });
+
+savedManifest.then(function(savedManif) {
+  if (savedManif === undefined) return;
+  if (mainFormElt.contains(document.activeElement)) return; // don’t mess with an interacting user
+
+  fillDomWithAppxManifestDict(
+    toDict(
+      (new DOMParser).parseFromString(savedManif, "text/xml")
+    )
+  );
+  // Display the “pre-filled” notice and reset button:
+  mainFormElt.querySelector("[role='status']").hidden = false;
+});
+
+prefillUsingWebAppManifBtn.onclick = webAppManifCancelBtn.onclick = function toggleForms() {
+  if (this === prefillUsingWebAppManifBtn) {
+    mainFormElt.hidden = true;
+    webAppManifForm.hidden = false;
+    webAppManifForm.firstElementChild.focus(); // the label
+  } else {
+    webAppManifForm.hidden = true;
+    mainFormElt.hidden = false;
+    prefillUsingWebAppManifBtn.focus();
+  }
+};
+
+webAppManifForm.onsubmit = function(evt) {
+  let webAppManifDict;
+
+  try {
+    webAppManifDict = JSON.parse(this.querySelector("textarea").value);
+  } catch (err) {
+    alert("☹ The input does not seem to be valid JSON.\n" + err);
+    return false;
+  }
+
+  const appxManifDict = webAppManifestDictToAppxManifestDict(webAppManifDict);
+
+  provide_sensible_version_numbers: {
+    const now = new Date;
+
+    appxManifDict.majorVersion = now.getFullYear();
+    appxManifDict.minorVersion = ((now.getMonth() + 1) * 100) + now.getDate();
+    appxManifDict.buildVersion = (now.getHours() * 100) + now.getMinutes();
+  }
+  fillDomWithAppxManifestDict(appxManifDict);
+  webAppManifCancelBtn.onclick(); // will switch between forms
+
+  evt.preventDefault();
+};
 
 useSameIconPathsElt.onchange = function() {
   for (let i = 0; i < iconPathsElts.length; i++) {
@@ -301,7 +430,7 @@ downloadBtn.onclick = (document.documentMode !== undefined)
     downloadLink.click();
   };
 
-formElt.onsubmit = function(evt) {
+mainFormElt.onsubmit = function(evt) {
   const inputData = {};
 
   for (let i = 0; i < inputElts.length; i++) {

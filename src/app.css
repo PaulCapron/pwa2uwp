@@ -212,6 +212,7 @@ a[download][hidden] + button:focus g {
  * Yes, these silly hacks are still needed in 2018…!
  */
 input,
+textarea,
 input[type=checkbox] + span[aria-hidden]::before { /* aria-hidden=true implied */
     border: .0625rem solid #aaa;
     border-bottom-color: #666;
@@ -273,6 +274,7 @@ input[type=color] {
  * Common styles to all controls.
  */
 button,
+textarea,
 input,
 input[type=checkbox] + span[aria-hidden]::before {
     outline-offset: var(--outline-offset);
@@ -281,16 +283,19 @@ input[type=checkbox] + span[aria-hidden]::before {
     word-spacing: inherit;
 }
 button:hover,
+textarea:hover,
 input:hover,
 label:hover > span[aria-hidden]::before {
     outline-style: var(--outline-style-hover);
 }
 button:focus,
+textarea:focus,
 input:focus,
 input[type=checkbox]:focus + span[aria-hidden]::before {
     outline-style: var(--outline-style-focus);
 }
 button:active,
+textarea:active,
 input:active,
 input[type=checkbox]:active + span[aria-hidden]::before,
 label:active > span[aria-hidden]::before {
@@ -318,6 +323,7 @@ input:read-only {
     outline: none;
 }
 input:invalid,
+textarea:invalid,
 noscript {
    color: var(--danger-color);
 }
