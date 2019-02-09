@@ -30,7 +30,8 @@
   .submitcancel-btngroup > button {
     margin: .25em;
   }
-  .submitcancel-btngroup > button[type=button] { /* cancel */
+  .submitcancel-btngroup > button[type=button], /* cancel */
+  button[type=reset] {
     background: var(--danger-color);
   }
 
@@ -46,10 +47,6 @@
     display: block;
     margin: .25em auto;
     text-align: center;
-  }
-  button[type=reset] {
-    background: var(--danger-color);
-    margin: 0;
   }
 
   h1 {
@@ -149,56 +146,38 @@
     margin-top: .6em;
   }
 
-  .submitcancel-btngroup > button[type=button] > svg,
-  button[type=reset] > svg {
-    transform: rotate(45deg);
-  }
-  button[type=submit] line {
+
+  .icon.document > line {
     stroke-dasharray: 0 10;
     transition: stroke-dasharray .1s;
   }
-  button[type=submit] line:last-child {
+  .icon.document > line:last-child {
     transition-delay: .1s;
   }
-  button[type=submit]:enabled:hover line,
-  button[type=submit]:focus line {
+  button:enabled:hover > .icon.document > line,
+  button:focus > .icon.document > line {
     stroke-dasharray: 10 10;
   }
-  #save line,
-  .submitcancel-btngroup > button[type=button] line,
-  button[type=reset] line {
-    stroke-dasharray: 9 1.5;
-    transition: stroke-dasharray .2s;
-  }
-  #save:enabled:hover line,
-  #save:focus line,
-  .submitcancel-btngroup > button[type=button]:hover line,
-  .submitcancel-btngroup > button[type=button]:focus line,
-  button[type=reset]:hover line,
-  button[type=reset]:focus line {
-    stroke-dasharray: 10.5 1.5;
+
+  .icon > polyline {
+    transition: transform .2s;
   }
 
-  p > button polyline { /* “Pre-fill using Web App Manif” button */
-    transition: transform .2s;
+  .icon.curlybrackets > polyline {
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  p > button:enabled:hover polyline,
-  p > button:focus polyline {
+  button:enabled:hover > .icon.curlybrackets > polyline,
+  button:focus > .icon.curlybrackets > polyline {
     transform: translateX(-.075em);
   }
-  p > button:enabled:hover polyline:last-child,
-  p > button:focus polyline:last-child {
+  button:enabled:hover > .icon.curlybrackets > polyline:last-child,
+  button:focus > .icon.curlybrackets > polyline:last-child {
     transform: translateX(.075em);
   }
 
-  .submitcancel-btngroup > button[type=submit] polyline {
-    transition: transform .2s;
-    transform-origin: center;
-  }
-  .submitcancel-btngroup > button[type=submit]:hover polyline,
-  .submitcancel-btngroup > button[type=submit]:focus polyline {
+  button:enabled:hover > .icon.anglebracket > polyline,
+  button:focus > .icon.anglebracket > polyline {
     transform: translateX(.125em);
   }
 </style>
@@ -247,16 +226,16 @@
     </label>
     <div role="group" class="submitcancel-btngroup">
       <button type="submit">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-          <polyline points="8,2 18,12 8,22"/>
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon anglebracket">
+          <polyline points="7,4 16,12 7,20"/>
         </svg>Submit
       </button>
       <button type="button">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-          <line x1="12" y1="13" x2="1.5" y2="13"/>
-          <line x1="12" y1="13" x2="22.5" y2="13"/>
-          <line x1="12" y1="13" x2="12" y2="2.5"/>
-          <line x1="12" y1="13" x2="12" y2="23.5"/>
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
+          <line x1="12" y1="12" x2="4.5" y2="4.5"/>
+          <line x1="12" y1="12" x2="19.5" y2="19.5"/>
+          <line x1="12" y1="12" x2="19.5" y2="4.5"/>
+          <line x1="12" y1="12" x2="4.5" y2="19.5"/>
         </svg>Cancel
       </button>
     </div>
@@ -268,17 +247,17 @@
         The form was filled with your saved data.
         You can also
         <button type="reset">
-          <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-            <line x1="12" y1="13" x2="1.5" y2="13"/>
-            <line x1="12" y1="13" x2="22.5" y2="13"/>
-            <line x1="12" y1="13" x2="12" y2="2.5"/>
-            <line x1="12" y1="13" x2="12" y2="23.5"/>
+          <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
+            <line x1="12" y1="12" x2="4.5" y2="4.5"/>
+            <line x1="12" y1="12" x2="19.5" y2="19.5"/>
+            <line x1="12" y1="12" x2="19.5" y2="4.5"/>
+            <line x1="12" y1="12" x2="4.5" y2="19.5"/>
           </svg>Reset the form
         </button>
         or
       </span>
       <button type="button" disabled="disabled">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon curlybrackets">
           <polyline points="10,2 6,2 6,10 3,12 6,14 6,22 10,22"/>
           <polyline points="14,2 18,2 18,10 21,12 18,14 18,22 14,22"/>
         </svg>Pre-fill the form using a Web App Manifest
@@ -579,7 +558,7 @@
     <button type="submit" disabled="disabled"
             title="The XML manifest will be displayed below.
 You’ll be able to download it or add it to your package.">
-      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon document">
         <polygon points="13,1 4,1 4,23 20,23 20,8"/>
         <polyline points="13,1 13,8 20,8"/>
         <line x1="7" x2="17" y1="13" y2="13"/>
@@ -591,21 +570,21 @@ You’ll be able to download it or add it to your package.">
       <output tabindex="0" translate="no"></output>
 
       <button type="button" id="save" disabled="disabled">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-          <line x1="12" y1="13" x2="1.5" y2="13"/>
-          <line x1="12" y1="13" x2="22.5" y2="13"/>
-          <line x1="12" y1="13" x2="12" y2="2.5"/>
-          <line x1="12" y1="13" x2="12" y2="23.5"/>
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
+          <line x1="12" y1="12" x2="1.5" y2="12"/>
+          <line x1="12" y1="12" x2="22.5" y2="12"/>
+          <line x1="12" y1="12" x2="12" y2="1.5"/>
+          <line x1="12" y1="12" x2="12" y2="22.5"/>
         </svg>Save in your package
       </button>
 
       <a hidden="hidden" download="appxmanifest.xml"></a>
       <button type="button">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon download">
           <line x1="4" x2="20" y1="23" y2="23"/>
           <g>
             <line x1="12" x2="12" y1="1" y2="19"/>
-            <polyline points="4.22,11.2 12,19 19.8,11.2"/>
+            <polyline points="4,11 12,19 20,11"/>
           </g>
         </svg>Download <code>appxmanifest.xml</code>
       </button>

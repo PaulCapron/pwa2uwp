@@ -180,27 +180,36 @@ button:active {
 button::-moz-focus-inner {
     border: none;
 }
-button > svg { /* icons */
-    fill: none;
-    height: 1.25em;
-    margin: 0 .5em 0 0;
-    stroke: currentcolor;
-    stroke-width: 1.75;
-    vertical-align: text-top;
-    width: 1.25em;
-}
-a[download][hidden] + button g {
-    transition: transform .2s;
-}
-a[download][hidden] + button:enabled:hover g,
-a[download][hidden] + button:focus g {
-    transform: translateY(.085em);
-}
 @media (max-width: 30em) {
     button {
         min-height: 3em;
         width: 99%;
     }
+}
+
+/*button > */.icon {
+    fill: none;
+    height: 1.25em;
+    margin: 0 .5em 0 0;
+    stroke: currentcolor;
+    stroke-width: 1.75;
+    vertical-align: text-bottom;
+    width: 1.25em;
+}
+.icon.cross > line {
+    stroke-dasharray: 9 1.75;
+    transition: stroke-dasharray .2s;
+}
+button:enabled:hover > .icon.cross > line,
+button:focus > .icon.cross > line {
+    stroke-dasharray: 10.5 1.75;
+}
+.icon.download > g {
+    transition: transform .2s;
+}
+button:enabled:hover > .icon.download > g,
+button:focus > .icon.download > g {
+    transform: translateY(.085em);
 }
 
 

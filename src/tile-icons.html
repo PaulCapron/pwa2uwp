@@ -77,15 +77,6 @@
     background-size: 20px 20px;
     -ms-high-contrast-adjust: none;
   }
-
-  #save line {
-    stroke-dasharray: 9 1.5;
-    transition: stroke-dasharray .2s;
-  }
-  #save:enabled:hover line,
-  #save:focus line {
-    stroke-dasharray: 10.5 1.5;
-  }
 </style>
 <style>/* this last stylesheet operated in JavaScript */</style>
 
@@ -281,21 +272,21 @@
     </output>
 
     <button type="button" id="save" disabled="disabled">
-      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
-        <line x1="12" y1="13" x2="1.5" y2="13"/>
-        <line x1="12" y1="13" x2="22.5" y2="13"/>
-        <line x1="12" y1="13" x2="12" y2="2.5"/>
-        <line x1="12" y1="13" x2="12" y2="23.5"/>
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
+        <line x1="12" y1="12" x2="1.5" y2="12"/>
+        <line x1="12" y1="12" x2="22.5" y2="12"/>
+        <line x1="12" y1="12" x2="12" y2="1.5"/>
+        <line x1="12" y1="12" x2="12" y2="22.5"/>
       </svg>Save in your package
     </button>
 
     <a hidden="hidden" download="tile-icons.zip"></a>
     <button type="button">
-      <svg aria-hidden="true" width="0" viewBox="0 0 24 24">
+      <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon download">
         <line x1="4" x2="20" y1="23" y2="23"/>
         <g>
           <line x1="12" x2="12" y1="1" y2="19"/>
-          <polyline points="4.22,11.2 12,19 19.8,11.2"/>
+          <polyline points="4,11 12,19 20,11"/>
         </g>
       </svg>Download <code>tile-icons.zip</code>
     </button>
