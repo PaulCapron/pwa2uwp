@@ -11,15 +11,16 @@
 
 import { savedManifest, saveManifest } from "./app.js";
 
+// Regarding the naming of functions, see
+// https://tomforsyth1000.github.io/blog.wiki.html#%5B%5BMatrix%20maths%20and%20names%5D%5D
 
-/** Generate a Windows 10 app package manifest.
- * ⚠ The caller is responsible for input validation.
- *
- * @param {!Object<string,(string|boolean|number)>} data  Data to fill the manifest.
+
+/** @return {!Document} The appx manifest, an XML document.
+ * @param {!Object<string,(string|boolean|number)>} appxDict  Data to fill the manifest.
  *  The keys are the same than the DOM <input> ids.
- * @return {string} The XML manifest, as a pretty-formatted string.
+ *  ⚠ The caller is responsible for input validation.
  */
-function generateManifest(data) {
+function appxManifDocFromDict(appxDict) {
   const manif = (new DOMParser).parseFromString(
 `<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
   <Identity ProcessorArchitecture="neutral"/>
@@ -81,8 +82,8 @@ function generateManifest(data) {
   const portraitFlippedRotElt = landscapeFlippedRotElt.nextElementSibling;
 
   basics: {
-    const { displayName, description, lang, url } = data;
-    const { majorVersion, minorVersion, buildVersion, revisionVersion } = data;
+    const { displayName, description, lang, url } = appxDict;
+    const { majorVersion, minorVersion, buildVersion, revisionVersion } = appxDict;
 
     appElt.setAttribute("StartPage", url);
     resourceElt.setAttribute("Language", lang);
@@ -103,8 +104,8 @@ function generateManifest(data) {
     }
   }
   orientations: {
-    const { landscapeOrientation, landscapeFlippedOrientation } = data;
-    const { portraitOrientation, portraitFlippedOrientation } = data;
+    const { landscapeOrientation, landscapeFlippedOrientation } = appxDict;
+    const { portraitOrientation, portraitFlippedOrientation } = appxDict;
 
     if (!landscapeOrientation && !landscapeFlippedOrientation &&
         !portraitOrientation && !portraitFlippedOrientation) {
@@ -129,9 +130,9 @@ function generateManifest(data) {
     }
   }
   iconography: {
-    const { storeLogo, square44x44Logo, square150x150Logo } = data;
-    const { square71x71Logo, square310x310Logo, wide310x150Logo } = data;
-    const { shortName, bgColor } = data;
+    const { storeLogo, square44x44Logo, square150x150Logo } = appxDict;
+    const { square71x71Logo, square310x310Logo, wide310x150Logo } = appxDict;
+    const { shortName, bgColor } = appxDict;
 
     logoElt.textContent = storeLogo;
     visualElt.setAttribute("BackgroundColor", bgColor);
@@ -163,25 +164,25 @@ function generateManifest(data) {
     }
   }
   microsoft_store_ids: {
-    const { publisher, publisherDisplayName, reservedName, pkgIdentityName } = data;
+    const { publisher, publisherDisplayName, reservedName, pkgIdentityName } = appxDict;
 
     displayNameElt.textContent = reservedName;
     publisherDisplayNameElt.textContent = publisherDisplayName;
     identityElt.setAttribute("Name", pkgIdentityName);
     identityElt.setAttribute("Publisher", publisher);
   }
-  return (new XMLSerializer).serializeToString(manif) + "\n";
+  return manif;
 }
 
-/** @return {!Object<string,(string|boolean|number)>} Extracted data from the manifest.
+/** @return {!Object<string,(string|boolean|number)>} Extracted data from the manifest document.
  *  The keys are the same than the DOM <input> ids.
- * @param {!Document} manifest  The manifest to read.
+ * @param {!Document} appxDoc  The manifest document to read.
  *
- * This function is basically the inverse of generateManifest().
+ * This function is the inverse of appxManifDocFromDict().
  */
-function toDict(manifest) {
-  const identityElt = manifest.querySelector("Identity");
-  const visualElt = manifest.querySelector("VisualElements");
+function appxManifDictFromDoc(appxDoc) {
+  const identityElt = appxDoc.querySelector("Identity");
+  const visualElt = appxDoc.querySelector("VisualElements");
   const defaultTileElt = visualElt.querySelector("DefaultTile");
   const versionNumbers = identityElt.getAttribute("Version").split(".");
 
@@ -191,11 +192,11 @@ function toDict(manifest) {
     buildVersion: Number(versionNumbers[2]),
     revisionVersion: Number(versionNumbers[3]),
 
-    reservedName: manifest.querySelector("DisplayName").textContent,
-    storeLogo: manifest.querySelector("Logo").textContent,
-    publisherDisplayName: manifest.querySelector("PublisherDisplayName").textContent,
-    url: manifest.querySelector("Application").getAttribute("StartPage"),
-    lang: manifest.querySelector("Resource").getAttribute("Language"),
+    reservedName: appxDoc.querySelector("DisplayName").textContent,
+    storeLogo: appxDoc.querySelector("Logo").textContent,
+    publisherDisplayName: appxDoc.querySelector("PublisherDisplayName").textContent,
+    url: appxDoc.querySelector("Application").getAttribute("StartPage"),
+    lang: appxDoc.querySelector("Resource").getAttribute("Language"),
 
     publisher: identityElt.getAttribute("Publisher"),
     pkgIdentityName: identityElt.getAttribute("Name"),
@@ -220,9 +221,9 @@ function toDict(manifest) {
   }
 }
 
-/** @return {!Object<string,(string|boolean|number)>} Converted manifest data.
+/** @return {!Object<string,(string|boolean|number)>} Manifest data converted to Appx format.
  *  The keys are the same than the DOM <input> ids.
- * @param {!Object<string,(string,!Array,!Object)>} webAppManif  The W3C Web App Manifest data.
+ * @param {!Object<string,(string,!Array,!Object)>} webDict  The W3C Web App Manifest data.
  *
  * It does not matter (much) if the resulting appx manifest data is actually invalid:
  * if the user then tries to submit the form, the built-in form validation will fail
@@ -231,7 +232,7 @@ function toDict(manifest) {
  * is allowed (and common, I guess) in a Web App Manifest, but it has to be absolute
  * in an Appx Manifest.
  */
-function webAppManifestDictToAppxManifestDict(webAppManif) {
+function appxManifDictFromWebAppManifDict(webDict) {
   let bgColor;
   {
     // A color in a W3C App Manifest can be given in any of the valid CSS3 color formats.
@@ -252,7 +253,7 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
     // See https://www.w3.org/TR/2dcontext/#serialization-of-a-color
     const canvasCtx = document.createElement("canvas").getContext("2d");
 
-    canvasCtx.fillStyle = webAppManif.theme_color; // (intentionally not background_color)
+    canvasCtx.fillStyle = webDict.theme_color; // (intentionally not background_color)
     bgColor = canvasCtx.fillStyle; // serialization ⇒ normalization happens here!
 
     // If the color was not fully opaque, bgColor ends up being of the form “rgba(…)”.
@@ -268,7 +269,7 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
 
   // See https://www.w3.org/TR/appmanifest/#orientation-member
   // and https://www.w3.org/TR/screen-orientation/
-  switch (webAppManif.orientation) {
+  switch (webDict.orientation) {
   case "any": landscapeFlippedOrientation = portraitFlippedOrientation = true; // fallthrough!
   case "natural": landscapeOrientation = portraitOrientation = true; break;
 
@@ -289,11 +290,11 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
     landscapeOrientation, portraitOrientation,
     landscapeFlippedOrientation, portraitFlippedOrientation,
 
-    displayName: webAppManif.name || "",
-    shortName: webAppManif.short_name || "",
-    description: webAppManif.description || "",
-    lang: webAppManif.lang || "",
-    url: webAppManif.start_url || "",
+    displayName: webDict.name || "",
+    shortName: webDict.short_name || "",
+    description: webDict.description || "",
+    lang: webDict.lang || "",
+    url: webDict.start_url || "",
   };
 }
 
@@ -325,10 +326,12 @@ savedManifest.then(function indexedDBIsSupported() {
     if (savedManif === undefined) return;
     if (mainFormElt.contains(document.activeElement)) return; // don’t mess with an interacting user
 
-    const appxManif = toDict((new DOMParser).parseFromString(savedManif, "text/xml"));
+    const appxManifDict = appxManifDictFromDoc(
+      (new DOMParser).parseFromString(savedManif, "text/xml")
+    );
 
-    for (const key in appxManif) {
-      const val = appxManif[key];
+    for (const key in appxManifDict) {
+      const val = appxManifDict[key];
       const prop = (typeof val === "boolean") ? "checked" : "value";
 
       document.getElementById(key)[prop] = val;
@@ -371,7 +374,9 @@ savedManifest.then(function indexedDBIsSupported() {
         : elt.value;
     }
 
-    outputElt.textContent = manifest = generateManifest(inputData);
+    outputElt.textContent = manifest = (new XMLSerializer).serializeToString(
+      appxManifDocFromDict(inputData)
+    ) + "\n";
 
     if (downloadLink.href === "") {
       outputElt.parentNode.hidden = false;
@@ -432,7 +437,7 @@ savedManifest.then(function indexedDBIsSupported() {
       return false;
     }
 
-    const appxManifDict = webAppManifestDictToAppxManifestDict(webAppManifDict);
+    const appxManifDict = appxManifDictFromWebAppManifDict(webAppManifDict);
 
     provide_sensible_version_numbers: {
       const now = new Date;
