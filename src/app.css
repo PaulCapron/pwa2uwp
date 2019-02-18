@@ -268,7 +268,6 @@ input:checked + span[aria-hidden]::before {
     content: "✔";
 }
 input[type=color] {
-    max-width: 3em;
     min-height: 1.4em;
     min-width: 2em;
 }
