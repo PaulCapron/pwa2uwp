@@ -312,6 +312,13 @@ const mainFormElt = document.forms[1];
 const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
 const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
 
+/** @param {boolean} areWritable  Whether the icon path <input>s shall be writable or read-only. */
+function setIconPathsWritability(areWritable) {
+  for (let i = 0; i < iconPathsElts.length; i++) {
+    iconPathsElts[i].readOnly = !areWritable;
+  }
+}
+
 /** @param {!Object<string,(string|boolean|number)>} appxManif  The manifest to fill the DOM with.
  *  The keys are expected to be the same than the DOM <input> ids.
  */
@@ -327,7 +334,7 @@ function fillDomWithAppxManifestDict(appxManif) {
 
     if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
       useSameIconPathsElt.checked = false;
-      useSameIconPathsElt.onchange(); // will make pathElt & its siblings read-write
+      setIconPathsWritability(true);
       break;
     }
   }
@@ -353,16 +360,7 @@ savedManifest.then(function(savedManif) {
   mainFormElt.querySelector("[role='status']").hidden = false;
 });
 
-useSameIconPathsElt.onchange = function() {
-  for (let i = 0; i < iconPathsElts.length; i++) {
-    const inputElt = iconPathsElts[i];
-
-    inputElt.readOnly = this.checked;
-    if (this.checked) {
-      inputElt.value = inputElt.getAttribute("value"); // reset to initial/default
-    }
-  }
-};
+useSameIconPathsElt.onchange = function() { setIconPathsWritability(!this.checked); };
 
 {
   const inputElts = mainFormElt.querySelectorAll("input[id]");
@@ -457,7 +455,9 @@ useSameIconPathsElt.onchange = function() {
     }
 
     fillDomWithAppxManifestDict(appxManifDict);
-    webAppManifCancelBtn.onclick(); // will switch between forms
+
+    webAppManifDialog.removeAttribute("open");
+    prefillUsingWebAppManifBtn.focus();
 
     evt.preventDefault();
   };
