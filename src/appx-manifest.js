@@ -309,16 +309,8 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
 
 let /** string */ manifest;
 const mainFormElt = document.forms[1];
-const inputElts = mainFormElt.querySelectorAll("input[id]");
 const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
 const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
-const outputElt = mainFormElt.querySelector("output");
-const saveBtn = outputElt.nextElementSibling;
-const downloadLink = saveBtn.nextElementSibling;
-const downloadBtn = downloadLink.nextElementSibling;
-
-
-mainFormElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
 
 /** @param {!Object<string,(string|boolean|number)>} appxManif  The manifest to fill the DOM with.
  *  The keys are expected to be the same than the DOM <input> ids.
@@ -342,6 +334,8 @@ function fillDomWithAppxManifestDict(appxManif) {
 }
 
 savedManifest.then(function indexedDBIsSupported() {
+  const saveBtn = mainFormElt.querySelector("output+button");
+
   saveBtn.disabled = false;
   saveBtn.onclick = function() { saveManifest(manifest); };
 });
@@ -370,51 +364,57 @@ useSameIconPathsElt.onchange = function() {
   }
 };
 
-// An <a href="blob:…"> is non-sense (rightclick → “copy link URL”, get screwed
-// because a Blob is short-lived).
-// So to work around that: hide the download link and make a <button> click() it.
-downloadBtn.onclick = (document.documentMode !== undefined)
-  ? function() { // navigating to a Blob doesn’t work on IE
-    navigator.msSaveOrOpenBlob(
-      new Blob([manifest], { "type": "text/xml", "endings": "native" }),
-      downloadLink.getAttribute("download")
-    );
-  }
-  : function() {
-    if (downloadLink.href === "") { // means a new manifest has been generated
-      downloadLink.href = URL.createObjectURL(
-        new Blob([manifest], { "type": "text/xml", "endings": "native" })
-      );
+{
+  const inputElts = mainFormElt.querySelectorAll("input[id]");
+  const outputElt = mainFormElt.querySelector("output");
+  const downloadLink = mainFormElt.querySelector("a[download]");
+  const downloadBtn = downloadLink.nextElementSibling;
+
+  mainFormElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
+
+  mainFormElt.onsubmit = function(evt) {
+    const inputData = {};
+
+    for (let i = 0; i < inputElts.length; i++) {
+      const elt = inputElts[i];
+
+      inputData[elt.id] = (elt.type === "checkbox")
+        ? elt.checked
+        : (elt.type === "number")
+        ? Number(elt.value) // IE & Edge<17.17681 don’t have valueAsNumber
+        : elt.value;
     }
-    downloadLink.click();
+
+    outputElt.textContent = manifest = generateManifest(inputData);
+
+    if (downloadLink.href === "") {
+      outputElt.parentNode.hidden = false;
+    } else {
+      URL.revokeObjectURL(downloadLink.href);
+      downloadLink.removeAttribute("href");
+    }
+    outputElt.focus({ "preventScroll": true });
+    downloadBtn.scrollIntoView({ "behavior": "smooth", "block": "end" });
+
+    evt.preventDefault();
   };
 
-mainFormElt.onsubmit = function(evt) {
-  const inputData = {};
-
-  for (let i = 0; i < inputElts.length; i++) {
-    const elt = inputElts[i];
-
-    inputData[elt.id] = (elt.type === "checkbox")
-      ? elt.checked
-      : (elt.type === "number")
-         ? Number(elt.value) // IE & Edge<17.17681 don’t have valueAsNumber
-         : elt.value;
-  }
-
-  outputElt.textContent = manifest = generateManifest(inputData);
-
-  if (downloadLink.href === "") {
-    outputElt.parentNode.hidden = false;
-  } else {
-    URL.revokeObjectURL(downloadLink.href);
-    downloadLink.removeAttribute("href");
-  }
-  outputElt.focus({ "preventScroll": true });
-  downloadBtn.scrollIntoView({ "behavior": "smooth", "block": "end" });
-
-  evt.preventDefault();
-};
+  downloadBtn.onclick = (document.documentMode !== undefined)
+    ? function() { // navigating to a Blob doesn’t work on IE
+      navigator.msSaveOrOpenBlob(
+        new Blob([manifest], { "type": "text/xml", "endings": "native" }),
+        downloadLink.getAttribute("download")
+      );
+    }
+    : function() {
+      if (downloadLink.href === "") { // means a new manifest has been generated
+        downloadLink.href = URL.createObjectURL(
+          new Blob([manifest], { "type": "text/xml", "endings": "native" })
+        );
+      }
+      downloadLink.click();
+    };
+}
 
 {
   const webAppManifForm = document.forms[0];
