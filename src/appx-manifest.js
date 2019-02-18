@@ -309,36 +309,6 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
 
 let /** string */ manifest;
 const mainFormElt = document.forms[1];
-const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
-const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
-
-/** @param {boolean} areWritable  Whether the icon path <input>s shall be writable or read-only. */
-function setIconPathsWritability(areWritable) {
-  for (let i = 0; i < iconPathsElts.length; i++) {
-    iconPathsElts[i].readOnly = !areWritable;
-  }
-}
-
-/** @param {!Object<string,(string|boolean|number)>} appxManif  The manifest to fill the DOM with.
- *  The keys are expected to be the same than the DOM <input> ids.
- */
-function fillDomWithAppxManifestDict(appxManif) {
-  for (const key in appxManif) {
-    const val = appxManif[key];
-    const prop = (typeof val === "boolean") ? "checked" : "value";
-
-    document.getElementById(key)[prop] = val;
-  }
-  for (let i = 0; i < iconPathsElts.length; i++) {
-    const pathElt = iconPathsElts[i];
-
-    if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
-      useSameIconPathsElt.checked = false;
-      setIconPathsWritability(true);
-      break;
-    }
-  }
-}
 
 savedManifest.then(function indexedDBIsSupported() {
   const saveBtn = mainFormElt.querySelector("output+button");
@@ -347,23 +317,47 @@ savedManifest.then(function indexedDBIsSupported() {
   saveBtn.onclick = function() { saveManifest(manifest); };
 });
 
-savedManifest.then(function(savedManif) {
-  if (savedManif === undefined) return;
-  if (mainFormElt.contains(document.activeElement)) return; // don’t mess with an interacting user
+{
+  const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
+  const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
 
-  fillDomWithAppxManifestDict(
-    toDict(
-      (new DOMParser).parseFromString(savedManif, "text/xml")
-    )
-  );
+  /** @param {boolean} areWritable  Whether the icon path <input>s shall be writable or read-only. */
+  function setIconPathsWritability(areWritable) {
+    for (let i = 0; i < iconPathsElts.length; i++) {
+      iconPathsElts[i].readOnly = !areWritable;
+    }
+  }
 
-  mainFormElt.onreset = setIconPathsWritability.bind(null, false);
+  useSameIconPathsElt.onchange = function() { setIconPathsWritability(!this.checked); };
 
-  // Display the “pre-filled” notice and reset button:
-  mainFormElt.querySelector("[role='status']").hidden = false;
-});
+  savedManifest.then(function(savedManif) {
+    if (savedManif === undefined) return;
+    if (mainFormElt.contains(document.activeElement)) return; // don’t mess with an interacting user
 
-useSameIconPathsElt.onchange = function() { setIconPathsWritability(!this.checked); };
+    const appxManif = toDict((new DOMParser).parseFromString(savedManif, "text/xml"));
+
+    for (const key in appxManif) {
+      const val = appxManif[key];
+      const prop = (typeof val === "boolean") ? "checked" : "value";
+
+      document.getElementById(key)[prop] = val;
+    }
+    for (let i = 0; i < iconPathsElts.length; i++) {
+      const pathElt = iconPathsElts[i];
+
+      if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
+        useSameIconPathsElt.checked = false;
+        setIconPathsWritability(true);
+        break;
+      }
+    }
+
+    mainFormElt.onreset = setIconPathsWritability.bind(null, false);
+
+    // Display the “pre-filled” notice and reset button:
+    mainFormElt.querySelector("[role='status']").hidden = false;
+  });
+}
 
 {
   const inputElts = mainFormElt.querySelectorAll("input[id]");
@@ -457,7 +451,12 @@ useSameIconPathsElt.onchange = function() { setIconPathsWritability(!this.checke
       appxManifDict.buildVersion = (now.getHours() * 100) + now.getMinutes();
     }
 
-    fillDomWithAppxManifestDict(appxManifDict);
+    for (const key in appxManifDict) {
+      const val = appxManifDict[key];
+      const prop = (typeof val === "boolean") ? "checked" : "value";
+
+      document.getElementById(key)[prop] = val;
+    }
 
     webAppManifDialog.removeAttribute("open");
     prefillUsingWebAppManifBtn.focus();
