@@ -356,6 +356,9 @@ savedManifest.then(function(savedManif) {
       (new DOMParser).parseFromString(savedManif, "text/xml")
     )
   );
+
+  mainFormElt.onreset = setIconPathsWritability.bind(null, false);
+
   // Display the “pre-filled” notice and reset button:
   mainFormElt.querySelector("[role='status']").hidden = false;
 });
