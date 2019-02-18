@@ -65,7 +65,7 @@ function decodeBase64DataURL(data) {
 
 
 const SCALES = Object.freeze(
-  // Sort to make the _displayed_ preview match devicePixelRatio:
+  // Order them so as to make the _displayed_ preview match devicePixelRatio:
   (self.devicePixelRatio <= 1)
    ? [4, 2, 1]
    : (self.devicePixelRatio <= 2)
@@ -75,8 +75,7 @@ const SCALES = Object.freeze(
 
 const /** !Object<string,!Uint8Array> */ icons = {};
 const sourceImage = new Image;
-const saveBtn = document.getElementById("save");
-const downloadAllLink = saveBtn.nextElementSibling;
+const downloadAllLink = document.querySelector("a[download][hidden]");
 const outputElt = document.querySelector("output");
 const extraOptionsElt = document.querySelector("form>div");
 const sourceFileElt = document.querySelector("input[type='file']");
@@ -93,7 +92,9 @@ const silhouetteElt = extraOptionsElt.querySelector("input[type='checkbox']");
   };
 }
 
-database.then(function() {
+database.then(function indexedDBIsSupported() {
+  const saveBtn = document.querySelector("button");
+
   saveBtn.onclick = saveIcons.bind(null, icons);
   saveBtn.disabled = false;
 });

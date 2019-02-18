@@ -59,7 +59,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
   const /** !Object<string,!Uint8Array> */ icons = results[0];
   const /** string|undefined */ manif = results[1];
 
-  const downloadLink = document.querySelector("a[hidden][download]");
+  const downloadLink = document.querySelector("a[download]");
 
   // CloudAppX wants content to be put in a folder named by the .zip basename:
   const zipFilename = downloadLink.getAttribute("download");
@@ -84,9 +84,9 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
     }
   }
 
-  manif: {
+  manifest: {
     if (manif === undefined) return;
-    document.getElementById("manifest").value = manif;
+    document.querySelector("textarea").value = manif;
 
     color_tile_backplates: {
       const bgColor = (new DOMParser)
