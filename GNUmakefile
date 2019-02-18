@@ -6,7 +6,7 @@ UNZIP ?= $(shell command -v unzip || (command -v jar && echo xf))
 .DELETE_ON_ERROR:
 .INTERMEDIATE: dst/tile-icons.js dst/appx-manifest.js dst/package.js
 
-build: dst/index.html \
+DST := dst/index.html \
 	dst/tile-icons.html \
 	dst/appx-manifest.html \
 	dst/package.html \
@@ -15,8 +15,10 @@ build: dst/index.html \
 	dst/sitemap.txt \
 	dst/favicon.ico \
 	dst/apple-touch-icon.png \
-	dst/msft-partner-pkg.png \
-	| dst/
+	dst/msft-partner-pkg.png
+
+build: $(DST)
+$(DST): | dst/
 
 %/: ; mkdir -p $@
 
@@ -52,9 +54,9 @@ dst/%.js: src/%.js src/app.js | 3p/closure-compiler.jar
 	rm saxon.zip
 
 
-stage: build; cd dst && python3 -m http.server
+stage: $(DST); cd dst && python3 -m http.server
 
-deploy: build; netlify deploy --prod --dir=dst
+deploy: $(DST); netlify deploy --prod --dir=dst
 
 clean: ; rm -rf dst
 
