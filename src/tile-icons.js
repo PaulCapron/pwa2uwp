@@ -16,7 +16,7 @@ import { ZipEntry } from "./zip.js";
 /** Reverse lookup table for decoding Base64 data.
  * It maps a ASCII charCode _minus 43_ to a 6-bit value. -1 means invalid.
  */
-const BASE64_DEC_TABLE = new Uint8Array([
+const BASE64_DECODE_TABLE = new Uint8Array([
   62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1,
   -1, -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
   18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31,
@@ -24,7 +24,7 @@ const BASE64_DEC_TABLE = new Uint8Array([
 ]);
 
 /** @return {!Uint8Array} The decoded bytes.
- * @param {string} data  A “data:…;base64,” URL.
+ * @param {string} data  A “data:…;base64,…” URL.
  * ⚠️ This function is unsafe: it does no error checking ⚠️
  */
 function decodeBase64DataURL(data) {
@@ -38,25 +38,26 @@ function decodeBase64DataURL(data) {
   let end = data.length - 1;
   const padlen = (data[end] === "=") ? (data[end - 1] === "=") ? 2 : 1 : 0;
   const out = new Uint8Array((len >> 1) + (len >> 2) - padlen);
+  let i, j;
 
   if (padlen !== 0) {
     end -= 4; // deal with full 4-char/24-bit chunks at first
   }
-  for (var i = start, j = 0; i <= end; i += 4, j += 3) {
-    const chunk = BASE64_DEC_TABLE[data.charCodeAt(i)     - 43] << 18
-                | BASE64_DEC_TABLE[data.charCodeAt(i + 1) - 43] << 12
-                | BASE64_DEC_TABLE[data.charCodeAt(i + 2) - 43] <<  6
-                | BASE64_DEC_TABLE[data.charCodeAt(i + 3) - 43];
+  for (i = start, j = 0; i <= end; i += 4, j += 3) {
+    const chunk = BASE64_DECODE_TABLE[data.charCodeAt(i)     - 43] << 18
+                | BASE64_DECODE_TABLE[data.charCodeAt(i + 1) - 43] << 12
+                | BASE64_DECODE_TABLE[data.charCodeAt(i + 2) - 43] <<  6
+                | BASE64_DECODE_TABLE[data.charCodeAt(i + 3) - 43];
     out[j]     = chunk >> 16;
     out[j + 1] = chunk >>  8;
     out[j + 2] = chunk;
   }
   if (padlen !== 0) {
-    let leftovers = BASE64_DEC_TABLE[data.charCodeAt(i)     - 43] << 12
-                  | BASE64_DEC_TABLE[data.charCodeAt(i + 1) - 43] <<  6;
+    let leftovers = BASE64_DECODE_TABLE[data.charCodeAt(i)     - 43] << 12
+                  | BASE64_DECODE_TABLE[data.charCodeAt(i + 1) - 43] <<  6;
     out[j] = leftovers >> 10;
     if (padlen === 1) {
-      leftovers |= BASE64_DEC_TABLE[data.charCodeAt(i + 2) - 43];
+      leftovers |= BASE64_DECODE_TABLE[data.charCodeAt(i + 2) - 43];
       out[j + 1] = leftovers >> 2;
     }
   }
