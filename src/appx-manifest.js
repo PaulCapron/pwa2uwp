@@ -12,13 +12,15 @@
 import { savedManifest, saveManifest } from "./app.js";
 
 
-/** The “mother” of all manifest documents.
- * It is itself immutable. It’s cloned each time the user submits the form;
- * the clone gets filled with <input> data, then it’s serialized to string.
- * ⚠ Whitespace is significant.
- * @const {Document}
+/** Generate a Windows 10 app package manifest.
+ * ⚠ The caller is responsible for input validation.
+ *
+ * @param {!Object<string,(string|boolean|number)>} data  Data to fill the manifest.
+ *  The keys are the same than the DOM <input> ids.
+ * @return {string} The XML manifest, as a pretty-formatted string.
  */
-const MANIFEST_MOTHER = (new DOMParser).parseFromString(
+function generateManifest(data) {
+  const manif = (new DOMParser).parseFromString(
 `<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
   <Identity ProcessorArchitecture="neutral"/>
   <Properties>
@@ -58,17 +60,6 @@ const MANIFEST_MOTHER = (new DOMParser).parseFromString(
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10240.0" MaxVersionTested="10.0.17763.0"/>
   </Dependencies>
 </Package>`, "text/xml");
-
-
-/** Generate a Windows 10 app package manifest.
- * ⚠ The caller is responsible for input validation.
- *
- * @param {!Object<string,(string|boolean|number)>} data  Data to fill the manifest.
- *  The keys are the same than the DOM <input> ids.
- * @return {string} The XML manifest, as a pretty-formatted string.
- */
-function generateManifest(data) {
-  const manif = MANIFEST_MOTHER.cloneNode(true);
 
   const identityElt = manif.querySelector("Identity");
   const displayNameElt = manif.querySelector("DisplayName");
