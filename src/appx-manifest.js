@@ -308,12 +308,7 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
 
 
 let /** string */ manifest;
-const webAppManifForm = document.forms[0];
 const mainFormElt = document.forms[1];
-const webAppManifDialog = webAppManifForm.parentNode;
-const webAppManifTextarea = webAppManifForm.querySelector("textarea");
-const webAppManifCancelBtn = webAppManifForm.querySelector("button[type='button']");
-const prefillUsingWebAppManifBtn = mainFormElt.querySelector("button[type='button']");
 const inputElts = mainFormElt.querySelectorAll("input[id]");
 const useSameIconPathsElt = mainFormElt.querySelector("input:not([id])");
 const iconPathsElts = mainFormElt.querySelectorAll("input[id$='Logo']");
@@ -323,8 +318,7 @@ const downloadLink = saveBtn.nextElementSibling;
 const downloadBtn = downloadLink.nextElementSibling;
 
 
-prefillUsingWebAppManifBtn.disabled =
-  mainFormElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
+mainFormElt.querySelector("button[type='submit']").disabled = false; // JS is enabled
 
 /** @param {!Object<string,(string|boolean|number)>} appxManif  The manifest to fill the DOM with.
  *  The keys are expected to be the same than the DOM <input> ids.
@@ -364,42 +358,6 @@ savedManifest.then(function(savedManif) {
   // Display the “pre-filled” notice and reset button:
   mainFormElt.querySelector("[role='status']").hidden = false;
 });
-
-prefillUsingWebAppManifBtn.onclick = webAppManifCancelBtn.onclick = function toggleForms() {
-  if (this === prefillUsingWebAppManifBtn) {
-    console.assert(!webAppManifDialog.hasAttribute("open"), "dialog not already opened");
-    webAppManifDialog.setAttribute("open", "");
-    webAppManifTextarea.focus();
-  } else {
-    webAppManifDialog.removeAttribute("open");
-    prefillUsingWebAppManifBtn.focus();
-  }
-};
-
-webAppManifForm.onsubmit = function(evt) {
-  let webAppManifDict;
-
-  try {
-    webAppManifDict = JSON.parse(webAppManifTextarea.value);
-  } catch (err) {
-    alert("☹ The input does not seem to be valid JSON.\n" + err);
-    return false;
-  }
-
-  const appxManifDict = webAppManifestDictToAppxManifestDict(webAppManifDict);
-
-  provide_sensible_version_numbers: {
-    const now = new Date;
-
-    appxManifDict.majorVersion = now.getFullYear();
-    appxManifDict.minorVersion = ((now.getMonth() + 1) * 100) + now.getDate();
-    appxManifDict.buildVersion = (now.getHours() * 100) + now.getMinutes();
-  }
-  fillDomWithAppxManifestDict(appxManifDict);
-  webAppManifCancelBtn.onclick(); // will switch between forms
-
-  evt.preventDefault();
-};
 
 useSameIconPathsElt.onchange = function() {
   for (let i = 0; i < iconPathsElts.length; i++) {
@@ -457,3 +415,50 @@ mainFormElt.onsubmit = function(evt) {
 
   evt.preventDefault();
 };
+
+{
+  const webAppManifForm = document.forms[0];
+  const webAppManifDialog = webAppManifForm.parentNode;
+  const webAppManifTextarea = webAppManifForm.querySelector("textarea");
+  const webAppManifCancelBtn = webAppManifForm.querySelector("button[type='button']");
+  const prefillUsingWebAppManifBtn = mainFormElt.querySelector("button[type='button']");
+
+  prefillUsingWebAppManifBtn.disabled = false; // JS is enabled
+
+  prefillUsingWebAppManifBtn.onclick = webAppManifCancelBtn.onclick = function() {
+    if (this === prefillUsingWebAppManifBtn) {
+      console.assert(!webAppManifDialog.hasAttribute("open"), "dialog not already opened");
+      webAppManifDialog.setAttribute("open", "");
+      webAppManifTextarea.focus();
+    } else {
+      webAppManifDialog.removeAttribute("open");
+      prefillUsingWebAppManifBtn.focus();
+    }
+  };
+
+  webAppManifForm.onsubmit = function(evt) {
+    let webAppManifDict;
+
+    try {
+      webAppManifDict = JSON.parse(webAppManifTextarea.value);
+    } catch (err) {
+      alert("☹ The input does not seem to be valid JSON.\n" + err);
+      return false;
+    }
+
+    const appxManifDict = webAppManifestDictToAppxManifestDict(webAppManifDict);
+
+    provide_sensible_version_numbers: {
+      const now = new Date;
+
+      appxManifDict.majorVersion = now.getFullYear();
+      appxManifDict.minorVersion = ((now.getMonth() + 1) * 100) + now.getDate();
+      appxManifDict.buildVersion = (now.getHours() * 100) + now.getMinutes();
+    }
+
+    fillDomWithAppxManifestDict(appxManifDict);
+    webAppManifCancelBtn.onclick(); // will switch between forms
+
+    evt.preventDefault();
+  };
+}
