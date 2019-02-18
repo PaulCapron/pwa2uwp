@@ -13,19 +13,28 @@
 <link rel="stylesheet" href="site.css"/>
 <link rel="stylesheet" href="app.css"/>
 <style>
-  form:first-of-type { /* “import web app manifest” form */
+  dialog { /* “import web app manifest” dialog */
+    background: inherit;
+    border: none;
+    color: inherit;
+    display: none;
     text-align: center;
+    position: static;
   }
+  dialog[open] {
+    display: block;
+  }
+  dialog[open] + form { /* the main form */
+    display: none;
+  }
+
   textarea {
     display: block;
     margin: auto;
     max-width: 99%;
   }
   .submitcancel-btngroup {
-    display: flex;
     flex-direction: row-reverse; /* make submit button visually on the right, but first in tab order */
-    flex-wrap: wrap;
-    justify-content: center;
   }
   .submitcancel-btngroup > button {
     margin: .25em;
@@ -35,15 +44,15 @@
     background: var(--danger-color);
   }
 
-  form:last-of-type > div {
+  form > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
   }
-  form:last-of-type > p button { /* reset and “pre-fill using web app manif” buttons */
+  form > p button { /* reset and “pre-fill using web app manif” buttons */
     font-size: inherit;
   }
-  form:last-of-type button[type=submit] {
+  dialog + form button[type=submit] {
     display: block;
     margin: .25em auto;
     text-align: center;
@@ -63,7 +72,7 @@
   form ul {
     margin: .25em 0;
   }
-  form > p:first-child { /* pre-filled notice with reset button */
+  form > p { /* pre-filled notice with reset button */
     margin: 0 0 .5em;
     max-width: 100%;
     text-align: center;
@@ -214,32 +223,34 @@
       package manifest</a> for a web app
   </h1>
 
-  <form action="#" hidden="hidden">
-    <label>
-      Paste your (<abbr>JSON</abbr>) Web App Manifest:
-      <textarea rows="25" cols="90" spellcheck="false"
-                minlength="2" maxlength="5000000" required="required"></textarea>
-      <!--
-           [maxlength] set to 5_000_000 is arbitrary but, I think, sensible.
-           [minlength] is 2 because that’s the length of “{}”.
-        -->
-    </label>
-    <div role="group" class="submitcancel-btngroup">
-      <button type="submit">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon anglebracket">
-          <polyline points="7,4 16,12 7,20"/>
-        </svg>Submit
-      </button>
-      <button type="button">
-        <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
-          <line x1="12" y1="12" x2="4.5" y2="4.5"/>
-          <line x1="12" y1="12" x2="19.5" y2="19.5"/>
-          <line x1="12" y1="12" x2="19.5" y2="4.5"/>
-          <line x1="12" y1="12" x2="4.5" y2="19.5"/>
-        </svg>Cancel
-      </button>
-    </div>
-  </form>
+  <dialog>
+    <form action="#">
+      <label>
+        Paste your (<abbr>JSON</abbr>) Web App Manifest:
+        <textarea rows="25" cols="90" spellcheck="false"
+                  minlength="2" maxlength="5000000" required="required"></textarea>
+        <!--
+            [maxlength] set to 5_000_000 is arbitrary but, I think, sensible.
+            [minlength] is 2 because that’s the length of “{}”.
+          -->
+      </label>
+      <div role="group" class="submitcancel-btngroup">
+        <button type="submit">
+          <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon anglebracket">
+            <polyline points="7,4 16,12 7,20"/>
+          </svg>Submit
+        </button>
+        <button type="button">
+          <svg aria-hidden="true" width="0" viewBox="0 0 24 24" class="icon cross">
+            <line x1="12" y1="12" x2="4.5" y2="4.5"/>
+            <line x1="12" y1="12" x2="19.5" y2="19.5"/>
+            <line x1="12" y1="12" x2="19.5" y2="4.5"/>
+            <line x1="12" y1="12" x2="4.5" y2="19.5"/>
+          </svg>Cancel
+        </button>
+      </div>
+    </form>
+  </dialog>
 
   <form action="#">
     <p>

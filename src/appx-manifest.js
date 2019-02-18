@@ -310,6 +310,8 @@ function webAppManifestDictToAppxManifestDict(webAppManif) {
 let /** string */ manifest;
 const webAppManifForm = document.forms[0];
 const mainFormElt = document.forms[1];
+const webAppManifDialog = webAppManifForm.parentNode;
+const webAppManifTextarea = webAppManifForm.querySelector("textarea");
 const webAppManifCancelBtn = webAppManifForm.querySelector("button[type='button']");
 const prefillUsingWebAppManifBtn = mainFormElt.querySelector("button[type='button']");
 const inputElts = mainFormElt.querySelectorAll("input[id]");
@@ -365,12 +367,11 @@ savedManifest.then(function(savedManif) {
 
 prefillUsingWebAppManifBtn.onclick = webAppManifCancelBtn.onclick = function toggleForms() {
   if (this === prefillUsingWebAppManifBtn) {
-    mainFormElt.hidden = true;
-    webAppManifForm.hidden = false;
-    webAppManifForm.firstElementChild.focus(); // the label
+    console.assert(!webAppManifDialog.hasAttribute("open"), "dialog not already opened");
+    webAppManifDialog.setAttribute("open", "");
+    webAppManifTextarea.focus();
   } else {
-    webAppManifForm.hidden = true;
-    mainFormElt.hidden = false;
+    webAppManifDialog.removeAttribute("open");
     prefillUsingWebAppManifBtn.focus();
   }
 };
@@ -379,7 +380,7 @@ webAppManifForm.onsubmit = function(evt) {
   let webAppManifDict;
 
   try {
-    webAppManifDict = JSON.parse(this.querySelector("textarea").value);
+    webAppManifDict = JSON.parse(webAppManifTextarea.value);
   } catch (err) {
     alert("☹ The input does not seem to be valid JSON.\n" + err);
     return false;
