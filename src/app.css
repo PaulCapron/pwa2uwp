@@ -236,7 +236,7 @@ input[type=color] {
     background: #fff;
     color: #000;
 }
-input:hover,
+input:enabled:hover,
 input:focus,
 input:active,
 input[type=checkbox]:focus + span[aria-hidden]::before,
@@ -317,6 +317,7 @@ label {
 /*******************************************************************************
  * Error/disabled/read-only states.
  */
+input:disabled,
 button:disabled {
     background: #fee !important;
     color: #766;
