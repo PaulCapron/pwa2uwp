@@ -14,7 +14,6 @@ import { savedManifest, saveManifest } from "./app.js";
 // Regarding the naming of functions, see
 // https://tomforsyth1000.github.io/blog.wiki.html#%5B%5BMatrix%20maths%20and%20names%5D%5D
 
-
 /** @return {!Document} The appx manifest, an XML document.
  * @param {!Object<string,(string|boolean|number)>} appxDict  Data to fill the manifest.
  *  The keys are the same than the DOM <input> ids.
@@ -116,15 +115,15 @@ function appxManifDocFromDict(appxDict) {
         rotPrefElt.removeChild(landscapeRotElt);
       }
       if (!landscapeFlippedOrientation) {
-        rotPrefElt.removeChild(landscapeFlippedRotElt.previousSibling);
+        rotPrefElt.removeChild(landscapeFlippedRotElt.previousSibling); // whitespace text node
         rotPrefElt.removeChild(landscapeFlippedRotElt);
       }
       if (!portraitOrientation) {
-        rotPrefElt.removeChild(portraitRotElt.previousSibling);
+        rotPrefElt.removeChild(portraitRotElt.previousSibling); // whitespace text node
         rotPrefElt.removeChild(portraitRotElt);
       }
       if (!portraitFlippedOrientation) {
-        rotPrefElt.removeChild(portraitFlippedRotElt.previousSibling);
+        rotPrefElt.removeChild(portraitFlippedRotElt.previousSibling); // whitespace text node
         rotPrefElt.removeChild(portraitFlippedRotElt);
       }
     }
@@ -339,7 +338,7 @@ savedManifest.then(function indexedDBIsSupported() {
     for (let i = 0; i < iconPathsElts.length; i++) {
       const pathElt = iconPathsElts[i];
 
-      if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value
+      if (pathElt.value !== pathElt.getAttribute("value")) { // not the default value set in HTML
         useSameIconPathsElt.checked = false;
         setIconPathsWritability(true);
         break;
@@ -370,8 +369,8 @@ savedManifest.then(function indexedDBIsSupported() {
       inputData[elt.id] = (elt.type === "checkbox")
         ? elt.checked
         : (elt.type === "number")
-        ? Number(elt.value) // IE & Edge<17.17681 don’t have valueAsNumber
-        : elt.value;
+          ? Number(elt.value) // IE & Edge<17.17681 don’t have valueAsNumber
+          : elt.value;
     }
 
     outputElt.textContent = manifest = (new XMLSerializer).serializeToString(
