@@ -59,6 +59,10 @@ a[rel=home] > abbr {
     text-shadow: 0 0 .125rem #111;
     -ms-high-contrast-adjust: none;
 }
+a[rel=home]:hover > abbr,
+a[rel=home]:focus > abbr {
+    background: linear-gradient(to top right, #f16529, #f16529 50%, #27b5f1 50%, #27b5f1);
+}
 a[rel=home] > abbr:first-of-type {
     background: #f16529;
 }
