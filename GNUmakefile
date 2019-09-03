@@ -49,7 +49,7 @@ dst/%.js: src/%.js src/app.js | 3p/closure-compiler.jar
 3p/closure-compiler.jar: | 3p/; $(HTTPGET) "https://dl.google.com/closure-compiler/compiler-20190819.tar.gz" | tar -Oxzf - closure-compiler-v20190819.jar >$@
 
 3p/saxon9he.jar: | 3p/
-	$(HTTPGET) "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-1J.zip" >saxon.zip
+	$(HTTPGET) "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-4J.zip" >saxon.zip
 	cd $(dir $@) && $(UNZIP) ../saxon.zip $(notdir $@)
 	rm saxon.zip
 
