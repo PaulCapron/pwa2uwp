@@ -46,7 +46,7 @@ dst/%.js: src/%.js src/app.js | 3p/closure-compiler.jar
 
 3p/htmlcompressor.jar: | 3p/; $(HTTPGET) "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/htmlcompressor/htmlcompressor-1.5.3.jar" >$@
 
-3p/closure-compiler.jar: | 3p/; $(HTTPGET) "https://dl.google.com/closure-compiler/compiler-20181210.tar.gz" | tar -Oxzf - closure-compiler-v20181210.jar >$@
+3p/closure-compiler.jar: | 3p/; $(HTTPGET) "https://dl.google.com/closure-compiler/compiler-20190819.tar.gz" | tar -Oxzf - closure-compiler-v20190819.jar >$@
 
 3p/saxon9he.jar: | 3p/
 	$(HTTPGET) "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-1J.zip" >saxon.zip
