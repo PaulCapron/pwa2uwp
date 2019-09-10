@@ -160,6 +160,7 @@ h1 {
 button {
     background: #111; /* fallback if CSS variables unsupported (IE) */
     background: var(--visited-color);
+    border-width: thin;
     color: #fff;
     font-family: inherit;
     font-size: larger;
