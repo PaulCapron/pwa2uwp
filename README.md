@@ -23,29 +23,25 @@ The build process requires an UNIX-like system, with
 installed.
 
 Some third-party open-source JARs are also needed.
-They are **automatically downloaded**, on first need, by `make`.  
-(The `HTTPGET` environment variable defines the download command to execute.
-It’s `curl` by default. `wget -O -` works too.)
+They are *automatically downloaded*, on first need, by `make`.  
+(The `HTTPGET` variable defines the download command to execute. It’s `curl`
+by default. `wget -O -` works too.)  
 These “development dependencies” are:
 
-  * [**Saxon-HE 9.≥8**](http://saxon.sourceforge.net/#F9.9HE),
-  a XSLT 2 processor, to embed CSS/JS code directly into the HTML & more.  
-  Put in a `3p/` folder, named `saxon9he.jar`.
-  On Ubuntu ≥ 18.04, you can `apt install` the `libsaxonhe-java` package,
+  * [`saxon9he.jar`](http://saxon.sourceforge.net/#F9.9HE),
+  a XSLT processor, mainly to embed CSS/JS code directly into the HTML.  
+  On Ubuntu ≥ 18.04, you can alternatively `apt install libsaxonhe-java`,
   then symlink `/usr/share/java/Saxon-HE.jar` to `3p/saxon9he.jar`.
 
-  * The [**Closure Compiler**](https://github.com/google/closure-compiler),
+  * [`closure-compiler.jar`](https://github.com/google/closure-compiler),
   to transpile and minify JavaScript code.  
-  Put in `3p/`, named `closure-compiler.jar`.
-  (⚠ The version available in Ubuntu package repositories is too old to work.)
+  ⚠ The version available in Ubuntu package repositories is too old to work.
 
-  * The [**YUICompressor**](https://github.com/yui/yuicompressor), to minify
-  CSS code. `htmlcompressor.jar` delegates that job to it.  
-  Put in `3p/`, named `yuicompressor.jar`.
+  * [`yuicompressor.jar`](https://github.com/yui/yuicompressor),
+  to minify CSS code.
 
-  * [**`htmlcompressor.jar`**](https://code.google.com/archive/p/htmlcompressor/),
+  * [`htmlcompressor.jar`](https://code.google.com/archive/p/htmlcompressor/),
   to minify HTML & XML code.
-  Put in `3p/`, named `htmlcompressor.jar`.
 
 ## Hierarchy
 
