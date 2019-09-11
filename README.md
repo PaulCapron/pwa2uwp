@@ -5,11 +5,9 @@ as an Universal Windows Platform (UWP) application.
 
 ## Usage
 
-Simply open `src/index.html` in Firefox for local use.
-
-Blink & WebKit browsers need an HTTP server, due to (over)restrictions
-regarding `file:` origins.  
-Running `cd src && python3 -m http.server` is an idea.
+During development, make the `src` directory available via HTTP.  
+For instance, run **`cd src && python3 -m http.server`**
+(alias `make devserve`.)
 
 Old browsers, including Internet Explorer 11, only (partially) work
 using the build, fit-for-distribution, website.

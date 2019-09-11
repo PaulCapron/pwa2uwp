@@ -54,6 +54,8 @@ dst/%.js: src/%.js src/app.js | 3p/closure-compiler.jar
 	rm saxon.zip
 
 
+devserve: ; cd src && python3 -m http.server
+
 stage: $(DST); cd dst && python3 -m http.server
 
 deploy: $(DST); netlify deploy --prod --dir=dst
