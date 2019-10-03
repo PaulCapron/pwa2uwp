@@ -113,5 +113,6 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
       downloadBtn.onclick = downloadLink.click.bind(downloadLink);
     }
     downloadBtn.disabled = false;
+    document.querySelector("aside").hidden = false;
   }
 });
