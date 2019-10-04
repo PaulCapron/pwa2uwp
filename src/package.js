@@ -71,15 +71,26 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
     const DPR = (self.devicePixelRatio < 2) ? 1 : ((self.devicePixelRatio === 2) ? 2 : 4);
 
     for (const name in icons) {
-      const scale = Number(name.substr(name.indexOf("-") + 1, 1));
-      console.assert([1, 2, 4].indexOf(scale) !== -1, "Valid icon scale", scale);
-
       zipEntries.push(new ZipEntry(folderName + name, icons[name]));
-      if (scale === DPR) {
-        const thumbElt = document.getElementById(name.substr(0, name.indexOf(".")));
 
-        thumbElt.src = URL.createObjectURL(new Blob([icons[name]], { "type": "image/png" }));
-        thumbElt.onload = function() { URL.revokeObjectURL(this.src); };
+      display_preview: {
+        let scale;
+        let thumbId;
+
+        if (name.indexOf("targetsize-") !== -1) {
+          scale = Number(name.substr(name.indexOf("-") + 1, 2)) / 16;
+          thumbId = "TaskbarIcon";
+        } else {
+          scale = Number(name.substr(name.indexOf("-") + 1, 1));
+          thumbId = name.substr(0, name.indexOf("."));
+        }
+
+        if (scale === DPR) {
+          const thumbElt = document.getElementById(thumbId);
+
+          thumbElt.src = URL.createObjectURL(new Blob([icons[name]], { "type": "image/png" }));
+          thumbElt.onload = function() { URL.revokeObjectURL(this.src); };
+        }
       }
     }
   }

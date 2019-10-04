@@ -179,7 +179,7 @@ export class ZipEntry {
    * @param {number=} dataCRC  CRC-32 value of the data.
    */
   constructor(name, data, lastModif = new Date, isText = false, dataCRC = crc32(data)) {
-    console.assert(/^[a-z0-9][a-z0-9/\-\.]{0,254}$/i.test(name), "Safe name", name);
+    console.assert(/^[a-z0-9][a-z0-9/\-\._]{0,254}$/i.test(name), "Safe name", name);
 
     const mtime = toDOSDatetime(lastModif);
 

@@ -68,10 +68,10 @@ function decodeBase64DataURL(data) {
 const SCALES = Object.freeze(
   // Order them so as to make the _displayed_ preview match devicePixelRatio:
   (self.devicePixelRatio <= 1)
-   ? [4, 2, 1]
-   : (self.devicePixelRatio <= 2)
-      ? [1, 4, 2]
-      : [1, 2, 4]
+    ? [4, 3, 2, 1.5, 1]
+    : (self.devicePixelRatio <= 2)
+      ? [1, 1.5, 4, 3, 2]
+      : [1, 1.5, 2, 3, 4]
 );
 
 const /** !Object<string,!Uint8Array> */ icons = {};
@@ -191,6 +191,10 @@ function makeTiles() {
     for (let i = 0; i < SCALES.length; i++) {
       const scale = SCALES[i];
 
+      const a = tileElt.querySelector(`a[download$="${scale * 100}.png"],
+                                       a[download*="targetsize-${scale * 16}_"]`);
+      if (a === null) continue;  // no such {tile, scale} couple
+
       draw_tile: {
         canvasElt.width = width * scale;
         canvasElt.height = height * scale;
@@ -216,7 +220,6 @@ function makeTiles() {
         }
       }
       link_and_add_to_dict: {
-        const a = tileElt.querySelector(`a[download$="${scale * 100}.png"]`);
         const url = canvasElt.toDataURL("image/png");
 
         a.href = url;
