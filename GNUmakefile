@@ -2,7 +2,7 @@ ORIGIN ?= https://pwa2uwp.fragara.com
 HTTPGET ?= curl --fail --show-error --silent --location
 UNZIP ?= $(shell command -v unzip || (command -v jar && echo xf))
 
-.PHONY: build stage deploy clean cleanall
+.PHONY: build devserve stage deploy clean cleanall
 .DELETE_ON_ERROR:
 .INTERMEDIATE: dst/tile-icons.js dst/appx-manifest.js dst/package.js
 
