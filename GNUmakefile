@@ -39,17 +39,17 @@ dst/%.html: src/%.html src/site.css postprod.xsl | 3p/saxon9he.jar 3p/htmlcompre
 dst/tile-icons.js dst/package.js: src/zip.js
 
 dst/%.js: src/%.js src/app.js | 3p/closure-compiler.jar
-	java -jar 3p/closure-compiler.jar --language_out ES5_STRICT --charset UTF-8 --rewrite_polyfills false --isolation_mode IIFE --dependency_mode STRICT --entry_point src/$* --js_output_file $@ $^
+	java -jar 3p/closure-compiler.jar --language_out ES5_STRICT --charset UTF-8 --rewrite_polyfills false --isolation_mode IIFE --dependency_mode PRUNE --entry_point src/$* --js_output_file $@ $^
 
 
 3p/yuicompressor.jar: | 3p/; $(HTTPGET) "https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar" >$@
 
 3p/htmlcompressor.jar: | 3p/; $(HTTPGET) "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/htmlcompressor/htmlcompressor-1.5.3.jar" >$@
 
-3p/closure-compiler.jar: | 3p/; $(HTTPGET) "https://dl.google.com/closure-compiler/compiler-20190819.tar.gz" | tar -Oxzf - closure-compiler-v20190819.jar >$@
+3p/closure-compiler.jar: | 3p/; $(HTTPGET) "https://dl.google.com/closure-compiler/compiler-20200204.tar.gz" | tar -Oxzf - closure-compiler-v20200204.jar >$@
 
 3p/saxon9he.jar: | 3p/
-	$(HTTPGET) "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-4J.zip" >saxon.zip
+	$(HTTPGET) "https://downloads.sourceforge.net/project/saxon/Saxon-HE/9.9/SaxonHE9-9-1-6J.zip" >saxon.zip
 	cd $(dir $@) && $(UNZIP) ../saxon.zip $(notdir $@)
 	rm saxon.zip
 
