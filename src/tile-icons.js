@@ -173,7 +173,7 @@ sourceImage.onload = silhouetteElt.onchange = function(evt) {
 };
 
 function makeTiles() {
-  for (
+  loop: for (
     let tileElt = outputElt.firstElementChild;
     tileElt !== null;
     tileElt = tileElt.nextElementSibling
@@ -221,7 +221,11 @@ function makeTiles() {
       }
       link_and_add_to_dict: {
         const url = canvasElt.toDataURL("image/png");
-
+        if (url === "") {
+          alert("☹ Could not read back generated image data.\n" +
+                "Does your browser block “canvas fingerprinting”?");
+          break loop;
+        }
         a.href = url;
         icons[a.getAttribute("download")] = decodeBase64DataURL(url);
         // Canvas#toBlob is not widely supported, and it + FileReader#readAsArrayBuffer
