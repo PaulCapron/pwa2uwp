@@ -74,7 +74,7 @@ const SCALES = Object.freeze(
       : [1, 1.5, 2, 3, 4]
 );
 
-const /** !Object<string,!Uint8Array> */ icons = {};
+let /** !Object<string,!Uint8Array> */ icons;
 const sourceImage = new Image;
 const downloadAllLink = document.querySelector("a[download][hidden]");
 const outputElt = document.querySelector("output");
@@ -96,7 +96,7 @@ const silhouetteElt = extraOptionsElt.querySelector("input[type='checkbox']");
 database.then(function indexedDBIsSupported() {
   const saveBtn = document.querySelector("button");
 
-  saveBtn.onclick = saveIcons.bind(null, icons);
+  saveBtn.onclick = function() { saveIcons(icons); };
   saveBtn.disabled = false;
 });
 
@@ -173,6 +173,8 @@ sourceImage.onload = silhouetteElt.onchange = function(evt) {
 };
 
 function makeTiles() {
+  icons = {};
+
   loop: for (
     let tileElt = outputElt.firstElementChild;
     tileElt !== null;
@@ -186,6 +188,10 @@ function makeTiles() {
     const innerHeight = height * canvasElt.dataset["innerHeightFraction"];
     const x = (width - innerWidth) / 2;
     const y = (height - innerHeight) / 2;
+
+    const isLight = (tileElt === outputElt.lastElementChild);
+    tileElt.hidden = (isLight && !silhouetteElt.checked);
+    if (tileElt.hidden) continue;
 
     canvasCtx["imageSmoothingQuality"] = "high";
     for (let i = 0; i < SCALES.length; i++) {
@@ -213,7 +219,7 @@ function makeTiles() {
 
           for (let i = 0; i < rgbαs.length; i += 4) {
             if (rgbαs[i + 3] !== 0) { // pixel not fully transparent…
-              rgbαs[i] = rgbαs[i + 1] = rgbαs[i + 2] = 0xff; // …make it white
+              rgbαs[i] = rgbαs[i + 1] = rgbαs[i + 2] = isLight ? 0x00 : 0xff; // …unicolor it
             }
           }
           canvasCtx.putImageData(imgData, scaledX, scaledY);

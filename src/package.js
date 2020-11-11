@@ -79,7 +79,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
 
         if (name.indexOf("targetsize-") !== -1) {
           scale = Number(name.substr(name.indexOf("-") + 1, 2)) / 16;
-          thumbId = "TaskbarIcon";
+          thumbId = (name.indexOf("light") !== -1) ? "TaskbarIconLight" : "TaskbarIcon";
         } else {
           scale = Number(name.substr(name.indexOf("-") + 1, 1));
           thumbId = name.substr(0, name.indexOf("."));
@@ -88,6 +88,7 @@ Promise.all([savedIcons, savedManifest]).then(function setup(results) {
         if (scale === DPR) {
           const thumbElt = document.getElementById(thumbId);
 
+          thumbElt.hidden = false;
           thumbElt.src = URL.createObjectURL(new Blob([icons[name]], { "type": "image/png" }));
           thumbElt.onload = function() { URL.revokeObjectURL(this.src); };
         }

@@ -165,9 +165,11 @@ export function saveIcons(icons) {
 
     tx.oncomplete = setIconsStatus.bind(null, true, true);
     tx.onabort = function() { alert("☹ Could not add to the database:\n" + this.error); };
-    for (const filename in icons) {
-      store.put(icons[filename], filename);
-    }
+    store.clear().onsuccess = function() {
+      for (const filename in icons) {
+        store.put(icons[filename], filename);
+      }
+    };
   });
 };
 
