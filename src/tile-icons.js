@@ -209,6 +209,7 @@ function makeTiles() {
         canvasCtx.drawImage(sourceImage, x, y, innerWidth, innerHeight);
 
         if (silhouetteElt.checked) {
+          const color = isLight ? 0x30 : ((innerWidth === 16) ? 0xf6 : 0xff);
           const scaledX = x * scale;
           const scaledY = y * scale;
           const imgData = canvasCtx.getImageData(
@@ -219,7 +220,7 @@ function makeTiles() {
 
           for (let i = 0; i < rgbαs.length; i += 4) {
             if (rgbαs[i + 3] !== 0) { // pixel not fully transparent…
-              rgbαs[i] = rgbαs[i + 1] = rgbαs[i + 2] = isLight ? 0x00 : 0xff; // …unicolor it
+              rgbαs[i] = rgbαs[i + 1] = rgbαs[i + 2] = color; // …unicolor it
             }
           }
           canvasCtx.putImageData(imgData, scaledX, scaledY);
