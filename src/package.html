@@ -93,16 +93,9 @@
     width: 99%;
   }
   textarea,
-  code,
-  kbd {
+  code {
     speak: literal-punctuation;
     speak-as: literal-punctuation;
-  }
-  kbd {
-    display: block;
-    font-weight: bolder;
-    margin: .75em;
-    overflow-x: auto;
   }
   section > small {
     display: block;
@@ -263,34 +256,17 @@
         <li>
           <strong>Convert the package zip to an <code>.appx</code> file</strong>,
           the format understood by Windows.
-          <p>
-            Call the
-            <a href="https://GitHub.com/MicrosoftEdge/CloudAppX" rel="external">
-              CloudAppX web service</a> for this.
-            For instance, using
-            <a href="https://en.Wikipedia.org/wiki/CURL" rel="external">
-              <code>curl</code></a>:
-            <kbd>curl -o <var>name</var>.appx -F "xml=@uwp-pkg.zip"
-              https://CloudAppX.AzureWebsites.net/v3/build</kbd>
-          </p>
-          <details>
-            <small>
-              This results in a file named <code><var>name</var>.appx</code>,
-              downloaded in the current directory. Use any <var>name</var> you want.
-              <br/>
-              The input zip must be named <code>uwp-pkg.zip</code>.
-            </small>
-            <p>
-              <small>
-                You can also do the conversion offline,
-                <a href="https://docs.Microsoft.com/windows/uwp/packaging/manual-packaging-root"
-                   rel="external">
-                  using the <code>MakeAppx.exe</code> &amp; <code>SignTool.exe</code> utilities</a>
-                that are included in the Windows 10
-                <abbr title="Software Development Kit">SDK</abbr>.
-              </small>
-            </p>
-          </details>
+          <br/>
+          Use the
+          <a href="https://docs.Microsoft.com/windows/msix/package/manual-packaging-root"
+             rel="external">
+            <code>MakeAppx.exe</code> &amp; <code>SignTool.exe</code> utilities</a>
+          that are included in the Windows 10
+          <abbr title="Software Development Kit">SDK</abbr>.
+          <br/>
+          Alternatively, you can do the
+          <a href="https://docs.Microsoft.com/windows/msix/desktop/vs-package-overview"
+             rel="external">conversion with Visual Studio</a>.
         </li>
 
         <li>
